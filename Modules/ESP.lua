@@ -31,11 +31,13 @@ function ESPModule:Init(Hub)
 
     RunService.RenderStepped:Connect(function()
         if Hub.Config.ESPEnabled then
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                    createESP(player.Character, Color3.new(1, 0, 0))
+            pcall(function()
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        createESP(player.Character, Color3.new(1, 0, 0))
+                    end
                 end
-            end
+            end)
         else
             if next(espCache) ~= nil then
                 clearESP()
