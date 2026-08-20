@@ -33,20 +33,19 @@ function Loader:AntiCheatBypass()
         end
         return namecall(self, ...)
     end)
-    
     setreadonly(gm, true)
 end
 
 function Loader:Start()
-    pcall(function()
-        self:AntiCheatBypass()
-    end)
+    pcall(function() self:AntiCheatBypass() end)
 
     local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/UI.lua"))()
     local AutoFarm = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/AutoFarm.lua"))()
     local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
+    local Performance = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Performance.lua"))()
 
     if UI then UI:Init(self) end
+    if Performance then Performance:Init(self) end
     if AutoFarm then AutoFarm:Init(self) end
     if Combat then Combat:Init(self) end
 end
