@@ -1,44 +1,37 @@
-local BaseURL = "https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/"
-
-local BloosHub = {
-    Config = {
-        AutoFarm = false,
-        FastAttack = true,
-        AttackSpeed = 0.05,
-        ESPEnabled = false
-    },
-    Services = {
-        Players = game:GetService("Players"),
-        ReplicatedStorage = game:GetService("ReplicatedStorage"),
-        Workspace = game:GetService("Workspace"),
-        TweenService = game:GetService("TweenService"),
-        RunService = game:GetService("RunService")
-    }
+local Loader = {}
+Loader.Config = {
+    AutoFarm = false,
+    FastAttack = false,
+    ESPEnabled = false,
+    Key = ""
 }
 
-local function LoadModule(name)
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet(BaseURL .. name .. ".lua"))()
-    end)
-    if not success then
-        warn("[BloosHub Error]: Failed to load " .. name .. " -> " .. tostring(result))
-        return nil
+Loader.Services = {
+    Players = game:GetService("Players"),
+    Workspace = game:GetService("Workspace"),
+    TweenService = game:GetService("TweenService"),
+    RunService = game:GetService("RunService"),
+    VirtualUser = game:GetService("VirtualUser")
+}
+
+local CorrectKey = "BLOO-FREE-2026"
+
+function Loader:VerifyKey(inputKey)
+    if inputKey == CorrectKey then
+        return true
     end
-    return result
+    return false
 end
 
-BloosHub.UI = LoadModule("UI")
-BloosHub.Combat = LoadModule("Combat")
-BloosHub.AutoFarm = LoadModule("AutoFarm")
+function Loader:Start()
+    local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/UI.lua"))()
+    local AutoFarm = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/AutoFarm.lua"))()
+    local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
 
-if BloosHub.UI then
-    BloosHub.UI:Init(BloosHub)
+    UI:Init(self)
+    AutoFarm:Init(self)
+    Combat:Init(self)
 end
 
-if BloosHub.Combat then
-    BloosHub.Combat:Init(BloosHub)
-end
-
-if BloosHub.AutoFarm then
-    BloosHub.AutoFarm:Init(BloosHub)
-end
+Loader:Start()
+return Loader
