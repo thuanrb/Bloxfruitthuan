@@ -9,11 +9,11 @@ local introImages = {
 }
 
 function UIModule:Init(Hub)
-    local TweenService = game:GetService("TweenService")
+    local TweenService = Hub.Services.TweenService
     local CoreGui = game:GetService("CoreGui")
     
     local splashGui = Instance.new("ScreenGui")
-    splashGui.Name = "BloosSplashPremium"
+    splashGui.Name = "BloosSplashUltra"
     splashGui.Parent = CoreGui
     splashGui.IgnoreGuiInset = true
     splashGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -32,21 +32,21 @@ function UIModule:Init(Hub)
     imageLabel.ScaleType = Enum.ScaleType.Crop
     imageLabel.Parent = backgroundFrame
     
-    local tweenIn = TweenService:Create(imageLabel, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {ImageTransparency = 0})
-    local tweenOut = TweenService:Create(imageLabel, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageTransparency = 1})
-    local fadeBg = TweenService:Create(backgroundFrame, TweenInfo.new(1.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
+    local tweenIn = TweenService:Create(imageLabel, TweenInfo.new(1.0, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {ImageTransparency = 0})
+    local tweenOut = TweenService:Create(imageLabel, TweenInfo.new(1.0, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageTransparency = 1})
+    local fadeBg = TweenService:Create(backgroundFrame, TweenInfo.new(1.0, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {BackgroundTransparency = 1})
     
-    local live2DTween = TweenService:Create(imageLabel, TweenInfo.new(3.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
-        Size = UDim2.new(1.08, 0, 1.08, 0),
-        Position = UDim2.new(-0.02, 0, -0.02, 0),
-        Rotation = 1.2
+    local live2DTween = TweenService:Create(imageLabel, TweenInfo.new(3.0, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        Size = UDim2.new(1.06, 0, 1.06, 0),
+        Position = UDim2.new(-0.03, 0, -0.03, 0),
+        Rotation = 1.0
     })
     
     live2DTween:Play()
     tweenIn:Play()
     tweenIn.Completed:Wait()
     
-    task.wait(2.0) 
+    task.wait(1.5) 
     
     tweenOut:Play()
     fadeBg:Play()
@@ -62,9 +62,9 @@ function UIModule:Init(Hub)
     if not success or not RedzLib then return end
 
     local Window = RedzLib:MakeWindow({
-        Title = "⚡ BLOOS HUB : PREMIUM ⚡",
-        SubTitle = "Version 1.0 | By ThuanRB",
-        SaveFolder = "BloosPremiumConfig"
+        Title = "⚡ BLOOS HUB : ULTRA PREMIUM ⚡",
+        SubTitle = "Version 2.0 | High Performance",
+        SaveFolder = "BloosUltraConfig"
     })
 
     local TabMain = Window:MakeTab({"Main", "home"})
@@ -130,7 +130,7 @@ function UIModule:Init(Hub)
 
     TabMisc:AddSection({"Performance & Servers"})
     TabMisc:AddToggle({
-        Name = "FPS Boost (Anti-Lag)",
+        Name = "FPS Boost (Deep Clean)",
         Default = false,
         Callback = function(Value) 
             if Hub.TogglePerformance then Hub.TogglePerformance(Value) end
@@ -150,7 +150,7 @@ function UIModule:Init(Hub)
     TabMisc:AddButton({
         Name = "Rejoin Server",
         Callback = function()
-            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+            Hub.Services.TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Hub.Services.Players.LocalPlayer)
         end
     })
 end
