@@ -1,51 +1,9 @@
 local Loader = {}
-Loader.Config = {
-    AutoFarm = false,
-    AutoFarmNearest = false,
-    AutoStats = false,
-    FastAttack = false,
-    BringMobs = false,
-    ESPEnabled = false,
-    ChestESP = false,
-    BoostFPS = false,
-    HopTTK = false,
-    SelectedWeapon = "Melee",
-    SelectedStat = "Melee"
-}
-
-Loader.Services = {
-    Players = game:GetService("Players"),
-    Workspace = game:GetService("Workspace"),
-    RunService = game:GetService("RunService"),
-    VirtualUser = game:GetService("VirtualUser"),
-    TweenService = game:GetService("TweenService"),
-    HttpService = game:GetService("HttpService"),
-    TeleportService = game:GetService("TeleportService")
-}
-
-function Loader:AntiCheatBypass()
-    pcall(function()
-        local gm = getrawmetatable(game)
-        if not gm then return end
-        
-        setreadonly(gm, false)
-        local namecall = gm.__namecall
-        
-        gm.__namecall = newcclosure(function(self, ...)
-            local method = getnamecallmethod()
-            if method == "Kick" or method == "kick" then
-                return nil
-            end
-            return namecall(self, ...)
-        end)
-        setreadonly(gm, true)
-    end)
-end
+Loader.Config = { AutoFarm = false, AutoFarmNearest = false, AutoStats = false, FastAttack = false, BringMobs = false, ESPEnabled = false, ChestESP = false, BoostFPS = false, HopTTK = false, SelectedWeapon = "Melee", SelectedStat = "Melee" }
+Loader.Services = { Players = game:GetService("Players"), Workspace = game:GetService("Workspace"), RunService = game:GetService("RunService"), VirtualUser = game:GetService("VirtualUser"), TweenService = game:GetService("TweenService"), HttpService = game:GetService("HttpService"), TeleportService = game:GetService("TeleportService") }
 
 function Loader:Start()
-    self:AntiCheatBypass()
-
-    local success, err = pcall(function()
+    pcall(function()
         local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/UI.lua"))()
         local AutoFarm = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/AutoFarm.lua"))()
         local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
@@ -60,10 +18,6 @@ function Loader:Start()
         if ESP then ESP:Init(self) end
         if ServerHop then ServerHop:Init(self) end
     end)
-    
-    if not success then
-        warn("Bloos Hub Loader Error: " .. tostring(err))
-    end
 end
 
 Loader:Start()
