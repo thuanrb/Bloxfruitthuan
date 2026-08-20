@@ -70,6 +70,15 @@ function UIModule:Init(Hub)
         Callback = function() print("Upgraded Sword") end
     })
 
+    TabTeleport:AddDropdown({
+        Name = "Select Island",
+        Options = {"Café", "Mansion", "Castle on the Sea", "Hydra Island"},
+        Default = "Café",
+        Callback = function(Value)
+            print("Teleporting to: " .. Value)
+        end
+    })
+
     TabRaid:AddToggle({
         Name = "Auto Raid",
         Default = Hub.Config.AutoRaid,
