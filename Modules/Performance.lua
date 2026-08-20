@@ -1,60 +1,46 @@
-local PerformanceModule = {}
+local Performance = {}
 
-function PerformanceModule:Init(Hub)
+function Performance:Init(Loader)
+    local RunService = game:GetService("RunService")
     local Lighting = game:GetService("Lighting")
     local Workspace = game:GetService("Workspace")
-    local Terrain = Workspace:FindFirstChildOfClass("Terrain")
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
 
-    local memoryConnection = nil
-
-    local function applyDeepOptimization()
-        pcall(function()
-            Lighting.GlobalShadows = false
-            Lighting.FogEnd = 9e9
-            Lighting.ShadowSoftness = 0
-            Lighting.Technology = Enum.Technology.Compatibility
-            
-            if Terrain then
-                Terrain.WaterWaveSize = 0
-                Terrain.WaterWaveSpeed = 0
-                Terrain.WaterReflectance = 0
-                Terrain.WaterTransparency = 0
-            end
-
-            for _, v in ipairs(Workspace:GetDescendants()) do
-                if v:IsA("BasePart") then
-                    v.Material = Enum.Material.SmoothPlastic
-                    v.Reflectance = 0
-                    if not v:IsDescendantOf(game:GetService("Players").LocalPlayer.Character) then
-                        v.CastShadow = false
+    -- Lắng nghe cấu hình BoostFPS từ Loader
+    task.spawn(function()
+        while task.wait(1) do
+            if Loader.Config.BoostFPS then
+                pcall(function()
+                    -- Giảm tải đồ họa để tăng FPS tối đa
+                    Lighting.GlobalShadows = false
+                    Lighting.FogEnd = 9e9
+                    settings():GetService("RenderSettings").RenderingEnabled = true
+                    
+                    for _, v in pairs(Workspace:GetDescendants()) do
+                        if v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation") then
+                            v.Material = Enum.Material.SmoothPlastic
+                            v.Reflectance = 0
+                        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") then
+                            v.Enabled = false
+                        end
                     end
-                elseif v:IsA("Decal") or v:IsA("Texture") then
-                    v.Transparency = 1
-                elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") then
-                    v.Enabled = false
-                end
-            end
-        end)
-    end
-
-    Hub.TogglePerformance = function(state)
-        Hub.Config.BoostFPS = state
-        if state then
-            applyDeepOptimization()
-            -- Tự động dọn rác bộ nhớ RAM mỗi 4 giây tránh tràn bộ nhớ khi cắm máy xuyên đêm
-            memoryConnection = task.spawn(function()
-                while Hub.Config.BoostFPS do
-                    task.wait(4)
-                    collectgarbage("collect")
-                end
-            end)
-        else
-            if memoryConnection then
-                task.cancel(memoryConnection)
-                memoryConnection = nil
+                end)
             end
         end
-    end
+    end)
+
+    -- Chống AFK thông minh để treo máy cày cuốc không bị kick
+    pcall(function()
+        local vu = game:GetService("VirtualUser")
+        LocalPlayer.Idled:Connect(function()
+            vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+            task.wait(1)
+            vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+        end)
+    end)
+
+    print("Bloos Hub Performance Module Loaded!")
 end
 
-return PerformanceModule
+return Performance
