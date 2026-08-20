@@ -43,11 +43,13 @@ function Loader:Start()
     local AutoFarm = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/AutoFarm.lua"))()
     local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
     local Performance = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Performance.lua"))()
+    local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/ESP.lua"))()
 
     if UI then UI:Init(self) end
     if Performance then Performance:Init(self) end
     if AutoFarm then AutoFarm:Init(self) end
     if Combat then Combat:Init(self) end
+    if ESP then ESP:Init(self) end
 end
 
 Loader:Start()
