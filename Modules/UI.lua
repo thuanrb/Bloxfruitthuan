@@ -1,59 +1,86 @@
 local UIModule = {}
 
 function UIModule:Init(Hub)
-    local success, Rayfield = pcall(function()
-        return loadstring(game:HttpGet("https://sirius.menu/gen2"))()
+    local success, RedzLib = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/realredz/BloxFruits/refs/heads/main/Source.lua"))()
     end)
 
-    if not success or not Rayfield then
-        warn("[BloosHub]: Failed to load Rayfield UI!")
+    if not success or not RedzLib then
+        warn("[BloosHub]: Failed to load RedzLib UI!")
         return
     end
 
-    local Window = Rayfield:CreateWindow({
-        Name = "⚡ BLOOS HUB : ENTERPRISE EDITION ⚡",
-        LoadingTitle = "Initializing Modular System...",
-        LoadingSubtitle = "by ThuanRB",
-        ConfigurationSaving = {
-            Enabled = true,
-            FolderName = "BloosHubConfig",
-            FileName = "EnterpriseConfig"
-        },
-        KeySystem = false
+    -- Tạo cửa sổ chính theo phong cách Redz Hub
+    local Window = RedzLib:MakeWindow({
+        Title = "⚡ BLOOS HUB : ENTERPRISE ⚡",
+        SubTitle = "by ThuanRB",
+        SaveFolder = "BloosHubConfig"
     })
 
-    local MainTab = Window:CreateTab({ Name = "Main Control", Icon = "cpu" })
-    local VisualTab = Window:CreateTab({ Name = "Visual & ESP", Icon = "eye" })
+    -- Phân chia các Tab (Mục lớn) kèm icon giống Redz
+    local TabMain = Window:MakeTab({"Main Farm", "home"})
+    local TabCombat = Window:MakeTab({"Combat & PvP", "swords"})
+    local TabTeleport = Window:MakeTab({"Teleport", "map"})
+    local TabVisual = Window:MakeTab({"Visual & ESP", "eye"})
 
-    MainTab:CreateToggle({
+    -- --- TAB 1: MAIN FARM ---
+    local SectionMain = TabMain:AddSection({"Farm Settings"})
+    
+    TabMain:AddToggle({
         Name = "Auto Farm Level",
-        CurrentValue = Hub.Config.AutoFarm,
+        Default = Hub.Config.AutoFarm,
         Callback = function(Value)
             Hub.Config.AutoFarm = Value
-        end,
+        end
     })
 
-    MainTab:CreateToggle({
+    TabMain:AddToggle({
         Name = "Fast Attack",
-        CurrentValue = Hub.Config.FastAttack,
+        Default = Hub.Config.FastAttack,
         Callback = function(Value)
             Hub.Config.FastAttack = Value
-        end,
+        end
     })
 
-    VisualTab:CreateToggle({
-        Name = "Player & Object ESP",
-        CurrentValue = Hub.Config.ESPEnabled,
+    -- --- TAB 2: COMBAT ---
+    local SectionCombat = TabCombat:AddSection({"Combat Options"})
+    
+    TabCombat:AddButton({
+        Name = "Bring Mobs (Gom quái)",
+        Callback = function()
+            print("Bring mobs activated")
+        end
+    })
+
+    -- --- TAB 3: TELEPORT ---
+    local SectionTeleport = TabTeleport:AddSection({"World Teleports"})
+    
+    TabTeleport:AddDropdown({
+        Name = "Select Island",
+        Options = {"Café", "Mansion", "Castle on the Sea", "Hydra Island"},
+        Default = "Café",
+        Callback = function(Value)
+            print("Teleporting to: " .. Value)
+        end
+    })
+
+    -- --- TAB 4: VISUAL ---
+    local SectionVisual = TabVisual:AddSection({"ESP Options"})
+    
+    TabVisual:AddToggle({
+        Name = "Player ESP",
+        Default = Hub.Config.ESPEnabled,
         Callback = function(Value)
             Hub.Config.ESPEnabled = Value
-        end,
+        end
     })
-
-    Rayfield:Notify({
-        Title = "Success",
-        Content = "Modular system loaded successfully!",
-        Duration = 5,
-        Image = 4483362458,
+    
+    TabVisual:AddToggle({
+        Name = "Fruit ESP (Nhìn trái ác quỷ)",
+        Default = false,
+        Callback = function(Value)
+            print("Fruit ESP: " .. tostring(Value))
+        end
     })
 end
 
