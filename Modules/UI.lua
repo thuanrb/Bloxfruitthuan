@@ -10,20 +10,17 @@ function UIModule:Init(Hub)
         return
     end
 
-    -- Tạo cửa sổ chính theo phong cách Redz Hub
     local Window = RedzLib:MakeWindow({
         Title = "⚡ BLOOS HUB : ENTERPRISE ⚡",
         SubTitle = "by ThuanRB",
         SaveFolder = "BloosHubConfig"
     })
 
-    -- Phân chia các Tab (Mục lớn) kèm icon giống Redz
     local TabMain = Window:MakeTab({"Main Farm", "home"})
     local TabCombat = Window:MakeTab({"Combat & PvP", "swords"})
     local TabTeleport = Window:MakeTab({"Teleport", "map"})
     local TabVisual = Window:MakeTab({"Visual & ESP", "eye"})
 
-    -- --- TAB 1: MAIN FARM ---
     local SectionMain = TabMain:AddSection({"Farm Settings"})
     
     TabMain:AddToggle({
@@ -42,17 +39,15 @@ function UIModule:Init(Hub)
         end
     })
 
-    -- --- TAB 2: COMBAT ---
     local SectionCombat = TabCombat:AddSection({"Combat Options"})
     
     TabCombat:AddButton({
-        Name = "Bring Mobs (Gom quái)",
+        Name = "Bring Mobs",
         Callback = function()
             print("Bring mobs activated")
         end
     })
 
-    -- --- TAB 3: TELEPORT ---
     local SectionTeleport = TabTeleport:AddSection({"World Teleports"})
     
     TabTeleport:AddDropdown({
@@ -60,11 +55,10 @@ function UIModule:Init(Hub)
         Options = {"Café", "Mansion", "Castle on the Sea", "Hydra Island"},
         Default = "Café",
         Callback = function(Value)
-            print("Teleporting to: " .. Value)
+            print("Teleporting to: " + Value)
         end
     })
 
-    -- --- TAB 4: VISUAL ---
     local SectionVisual = TabVisual:AddSection({"ESP Options"})
     
     TabVisual:AddToggle({
@@ -76,10 +70,10 @@ function UIModule:Init(Hub)
     })
     
     TabVisual:AddToggle({
-        Name = "Fruit ESP (Nhìn trái ác quỷ)",
+        Name = "Fruit ESP",
         Default = false,
         Callback = function(Value)
-            print("Fruit ESP: " .. tostring(Value))
+            print("Fruit ESP: " + tostring(Value))
         end
     })
 end
