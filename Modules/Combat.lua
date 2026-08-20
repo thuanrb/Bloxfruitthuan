@@ -1,19 +1,22 @@
 local CombatModule = {}
 
 function CombatModule:Init(Hub)
-    local RS = Hub.Services.ReplicatedStorage
-    local RunService = Hub.Services.RunService
-    local lastAttackTick = 0
+    local Players = Hub.Services.Players
+    local LocalPlayer = Players.LocalPlayer
+    local VirtualUser = Hub.Services.VirtualUser
 
-    RunService.Heartbeat:Connect(function()
-        if Hub.Config.FastAttack and Hub.Config.AutoFarm then
-            local currentTime = tick()
-            if currentTime - lastAttackTick >= Hub.Config.AttackSpeed then
-                lastAttackTick = currentTime
+    task.spawn(function()
+        while task.wait() do
+            if Hub.Config.FastAttack then
                 pcall(function()
-                    local netModule = RS:FindFirstChild("Modules") and RS.Modules:FindFirstChild("Net")
-                    if netModule and netModule:FindFirstChild("RegisterAttack") then
-                        netModule.RegisterAttack:FireServer(0.7)
+                    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        local Combat = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                        if Combat and Combat:FindFirstChild("Damage") then
+                            Combat:Activate()
+                            VirtualUser:Button1Down(Vector2.new(1, 1))
+                            task.wait(0.01)
+                            VirtualUser:Button1Up(Vector2.new(1, 1))
+                        end
                     end
                 end)
             end
