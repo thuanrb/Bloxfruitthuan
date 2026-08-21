@@ -7,12 +7,10 @@ function Performance:Init(Loader)
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
 
-    -- Lắng nghe cấu hình BoostFPS từ Loader
     task.spawn(function()
         while task.wait(1) do
             if Loader.Config.BoostFPS then
                 pcall(function()
-                    -- Giảm tải đồ họa để tăng FPS tối đa
                     Lighting.GlobalShadows = false
                     Lighting.FogEnd = 9e9
                     settings():GetService("RenderSettings").RenderingEnabled = true
@@ -30,7 +28,6 @@ function Performance:Init(Loader)
         end
     end)
 
-    -- Chống AFK thông minh để treo máy cày cuốc không bị kick
     pcall(function()
         local vu = game:GetService("VirtualUser")
         LocalPlayer.Idled:Connect(function()
@@ -39,8 +36,6 @@ function Performance:Init(Loader)
             vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
         end)
     end)
-
-    print("Bloos Hub Performance Module Loaded!")
 end
 
 return Performance
