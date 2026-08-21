@@ -1,4 +1,4 @@
--- Teddy Hub - God Mode Enterprise Master (Ultimate Paid Hub Engine)
+-- Teddy Hub - God Mode Enterprise Ultimate v3 (Advanced Core Architecture)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -33,9 +33,17 @@ local Config = {
     DistanceY = 28
 }
 
+-- Safe Execution Core Wrapper
+local function SafeCall(func)
+    local success, err = pcall(func)
+    if not success and err then
+        -- Silent error catch to prevent script crashes
+    end
+end
+
 -- Automated Team Initialization
 task.spawn(function()
-    pcall(function()
+    SafeCall(function()
         if Config.AutoMarine then
             local remotes = ReplicatedStorage:WaitForChild("Remotes", 5)
             if remotes and remotes:FindFirstChild("CommF_") then
@@ -47,7 +55,7 @@ end)
 
 -- Fullbright & Remove Fog Visual Engine
 task.spawn(function()
-    pcall(function()
+    SafeCall(function()
         RunService.RenderStepped:Connect(function()
             if Config.Fullbright then
                 game:GetService("Lighting").Brightness = 2
@@ -65,23 +73,23 @@ task.spawn(function()
     end)
 end)
 
--- God Mode Enterprise Multi-Tab UI Setup
-pcall(function()
-    if CoreGui:FindFirstChild("TeddyHub_GodEnterprise") then
-        CoreGui.TeddyHub_GodEnterprise:Destroy()
+-- Commercial Enterprise UI Setup
+SafeCall(function()
+    if CoreGui:FindFirstChild("TeddyHub_EnterpriseUltimate") then
+        CoreGui.TeddyHub_EnterpriseUltimate:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "TeddyHub_GodEnterprise"
+    ScreenGui.Name = "TeddyHub_EnterpriseUltimate"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = CoreGui
 
     local ToggleBtn = Instance.new("TextButton")
     ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
     ToggleBtn.Position = UDim2.new(0, 15, 0, 180)
-    ToggleBtn.BackgroundColor3 = Color3.fromRGB(5, 5, 12)
-    ToggleBtn.Text = "GOD"
-    ToggleBtn.TextColor3 = Color3.fromRGB(255, 0, 100)
+    ToggleBtn.BackgroundColor3 = Color3.fromRGB(4, 6, 12)
+    ToggleBtn.Text = "MAX"
+    ToggleBtn.TextColor3 = Color3.fromRGB(0, 255, 180)
     ToggleBtn.TextSize = 12
     ToggleBtn.Font = Enum.Font.GothamBold
     ToggleBtn.Parent = ScreenGui
@@ -90,7 +98,7 @@ pcall(function()
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.new(0, 470, 0, 390)
     MainFrame.Position = UDim2.new(0.5, -235, 0.5, -195)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(8, 10, 15)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(7, 9, 14)
     MainFrame.Visible = true
     MainFrame.Parent = ScreenGui
     Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
@@ -102,13 +110,12 @@ pcall(function()
     local Title = Instance.new("TextLabel")
     Title.Size = UDim2.new(1, 0, 0, 38)
     Title.BackgroundTransparency = 1
-    Title.Text = "TEDDY HUB [GOD ENTERPRISE EDITION]"
+    Title.Text = "TEDDY HUB [ENTERPRISE ULTIMATE]"
     Title.TextColor3 = Color3.fromRGB(255, 215, 0)
     Title.TextSize = 13
     Title.Font = Enum.Font.GothamBold
     Title.Parent = MainFrame
 
-    -- Tab Bar Containers (Scrollable for 6 Tabs)
     local TabContainer = Instance.new("ScrollingFrame")
     TabContainer.Size = UDim2.new(1, -20, 0, 32)
     TabContainer.Position = UDim2.new(0, 10, 0, 42)
@@ -121,7 +128,7 @@ pcall(function()
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(0, 82, 1, 0)
         btn.Position = UDim2.new(0, posX, 0, 0)
-        btn.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(15, 20, 28)
         btn.Text = name
         btn.TextColor3 = Color3.fromRGB(170, 170, 170)
         btn.TextSize = 11
@@ -187,7 +194,7 @@ pcall(function()
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 34)
         btn.Position = UDim2.new(0, 0, 0, posY)
-        btn.BackgroundColor3 = Color3.fromRGB(15, 18, 26)
+        btn.BackgroundColor3 = Color3.fromRGB(12, 16, 24)
         btn.Text = "    " .. name
         btn.TextColor3 = Color3.fromRGB(240, 240, 240)
         btn.TextSize = 11
@@ -209,43 +216,37 @@ pcall(function()
         end)
     end
 
-    -- Tab 1: Farm & Boss
     AddToggleToPage(pageFarm, "Auto Farm Level", "AutoFarm", 0)
     AddToggleToPage(pageFarm, "Auto Boss Hunter (All Bosses)", "AutoBoss", 38)
     AddToggleToPage(pageFarm, "Auto Raid (Awakening)", "AutoRaid", 76)
     AddToggleToPage(pageFarm, "Auto Collect Chests", "AutoChest", 114)
-    AddToggleToPage(pageFarm, "Fast Attack (God Bypass)", "FastAttack", 152)
+    AddToggleToPage(pageFarm, "Fast Attack (Optimized Stream)", "FastAttack", 152)
     AddToggleToPage(pageFarm, "Bring Mobs", "BringMobs", 190)
 
-    -- Tab 2: Sea Events & Island Finder
     AddToggleToPage(pageSea, "Auto Sea Beast Hunter", "SeaEvent_SeaBeast", 0)
     AddToggleToPage(pageSea, "Auto Leviathan Hunter", "SeaEvent_Leviathan", 38)
     AddToggleToPage(pageSea, "Auto Find Mirage Island", "FindMirage", 76)
     AddToggleToPage(pageSea, "Auto Find Legend/Kitsune Shrine", "FindLegend", 114)
 
-    -- Tab 3: Race V4 & Stats
     AddToggleToPage(pageStats, "Auto Stats (Melee/Defense/Sword)", "AutoStats", 0)
     AddToggleToPage(pageStats, "Auto Race V4 & Trial Solver", "AutoRaceV4", 38)
 
-    -- Tab 4: Shop & Sniper
     AddToggleToPage(pageShop, "Auto Devil Fruit Sniper (Collect Drops)", "FruitSniper", 0)
     AddToggleToPage(pageShop, "Auto Buy Haki / Enhancements", "AutoBuyHaki", 38)
 
-    -- Tab 5: Visual & Misc / PVP
     AddToggleToPage(pageMisc, "Player ESP (View Enemy Players)", "PlayerESP", 0)
     AddToggleToPage(pageMisc, "Fullbright (No Darkness)", "Fullbright", 38)
     AddToggleToPage(pageMisc, "Remove Fog & Atmosphere", "RemoveFog", 76)
     AddToggleToPage(pageMisc, "Auto Buso Haki", "AutoBuso", 114)
     AddToggleToPage(pageMisc, "Auto Select Marines Team", "AutoMarine", 152)
 
-    -- Tab 6: Mastery & Server Hop
     AddToggleToPage(pageExtra, "Auto Farm Mastery (Skills Spammer)", "AutoMastery", 0)
     AddToggleToPage(pageExtra, "Auto Server Hop (Low Player/Reset)", "ServerHop", 38)
 end)
 
 -- Anti-AFK Engine
 task.spawn(function()
-    pcall(function()
+    SafeCall(function()
         LocalPlayer.Idled:Connect(function()
             VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
             task.wait(1)
@@ -258,7 +259,7 @@ end)
 task.spawn(function()
     while task.wait(30) do
         if Config.ServerHop then
-            pcall(function()
+            SafeCall(function()
                 local servers = {}
                 local req = game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")
                 local body = game:GetService("HttpService"):JSONDecode(req)
@@ -281,11 +282,11 @@ end)
 task.spawn(function()
     while task.wait(0.3) do
         if Config.AutoMastery then
-            pcall(function()
+            SafeCall(function()
                 local vim = game:GetService("VirtualInputManager")
                 for _, key in ipairs({Enum.KeyCode.Z, Enum.KeyCode.X, Enum.KeyCode.C, Enum.KeyCode.V}) do
                     vim:SendKeyEvent(true, key, false, game)
-                    task.wait(0.05)
+                    task.wait(0.04)
                     vim:SendKeyEvent(false, key, false, game)
                 end
             end)
@@ -297,7 +298,7 @@ end)
 task.spawn(function()
     while task.wait(2) do
         if Config.AutoRaceV4 then
-            pcall(function()
+            SafeCall(function()
                 local remotes = ReplicatedStorage:FindFirstChild("Remotes")
                 if remotes and remotes:FindFirstChild("CommF_") then
                     remotes.CommF_:InvokeServer("ActivateAbility")
@@ -307,11 +308,11 @@ task.spawn(function()
     end
 end)
 
--- Fruit Sniper (Auto pickup dropped fruits)
+-- Fruit Sniper
 task.spawn(function()
     while task.wait(0.5) do
         if Config.FruitSniper then
-            pcall(function()
+            SafeCall(function()
                 for _, v in pairs(Workspace:GetChildren()) do
                     if v:IsA("Tool") and v:FindFirstChild("Handle") then
                         local char = LocalPlayer.Character
@@ -328,7 +329,7 @@ end)
 -- Player ESP Logic
 task.spawn(function()
     RunService.RenderStepped:Connect(function()
-        pcall(function()
+        SafeCall(function()
             if Config.PlayerESP then
                 for _, p in pairs(Players:GetPlayers()) do
                     if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
@@ -361,11 +362,11 @@ task.spawn(function()
     end)
 end)
 
--- Auto Boss Hunter (Elite, Rip_Indra, Dough King, etc.)
+-- Auto Boss Hunter
 task.spawn(function()
     while task.wait(1) do
         if Config.AutoBoss then
-            pcall(function()
+            SafeCall(function()
                 local bossFolder = Workspace:FindFirstChild("Enemies")
                 if bossFolder then
                     for _, enemy in pairs(bossFolder:GetChildren()) do
@@ -384,11 +385,11 @@ task.spawn(function()
     end
 end)
 
--- Auto Sea Events (Sea Beast & Leviathan Tracking)
+-- Auto Sea Events
 task.spawn(function()
     while task.wait(1) do
-        pcall(function()
-            if Config.SeaEvent_SeaBeast or Config.SeaEvent_Leviathan then
+        if Config.SeaEvent_SeaBeast or Config.SeaEvent_Leviathan then
+            SafeCall(function()
                 local enemiesFolder = Workspace:FindFirstChild("Enemies")
                 if enemiesFolder then
                     for _, enemy in pairs(enemiesFolder:GetChildren()) do
@@ -401,16 +402,16 @@ task.spawn(function()
                         end
                     end
                 end
-            end
-        end)
+            end)
+        end
     end
 end)
 
--- Auto Find Mirage & Legend Islands (Radar Scan)
+-- Auto Find Islands
 task.spawn(function()
     while task.wait(3) do
-        pcall(function()
-            if Config.FindMirage or Config.FindLegend then
+        if Config.FindMirage or Config.FindLegend then
+            SafeCall(function()
                 local mapFolder = Workspace:FindFirstChild("_Map") or Workspace
                 for _, obj in pairs(mapFolder:GetChildren()) do
                     if (Config.FindMirage and obj.Name:find("Mirage")) or (Config.FindLegend and (obj.Name:find("Prehistoric") or obj.Name:find("Kitsune"))) then
@@ -420,8 +421,8 @@ task.spawn(function()
                         end
                     end
                 end
-            end
-        end)
+            end)
+        end
     end
 end)
 
@@ -429,7 +430,7 @@ end)
 task.spawn(function()
     while task.wait(3) do
         if Config.AutoStats then
-            pcall(function()
+            SafeCall(function()
                 local remotes = ReplicatedStorage:FindFirstChild("Remotes")
                 if remotes and remotes:FindFirstChild("CommF_") then
                     remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
@@ -445,7 +446,7 @@ end)
 task.spawn(function()
     while task.wait(0.5) do
         if Config.AutoChest and not Config.AutoFarm then
-            pcall(function()
+            SafeCall(function()
                 local char = LocalPlayer.Character
                 if not char or not char:FindFirstChild("HumanoidRootPart") then return end
                 local rootPart = char.HumanoidRootPart
@@ -467,7 +468,7 @@ end)
 task.spawn(function()
     while task.wait(1) do
         if Config.AutoRaid then
-            pcall(function()
+            SafeCall(function()
                 local remotes = ReplicatedStorage:FindFirstChild("Remotes")
                 if remotes and remotes:FindFirstChild("CommF_") then
                     remotes.CommF_:InvokeServer("RaidsNpc", "Select")
@@ -479,9 +480,9 @@ end)
 
 -- High-Performance Farm Loop
 task.spawn(function()
-    while task.wait(0.1) do
+    while task.wait(0.08) do
         if Config.AutoFarm and not Config.AutoBoss then
-            pcall(function()
+            SafeCall(function()
                 local char = LocalPlayer.Character
                 if not char or not char:FindFirstChild("HumanoidRootPart") or not char:FindFirstChild("Humanoid") then return end
                 local rootPart = char.HumanoidRootPart
@@ -507,4 +508,6 @@ task.spawn(function()
                 local enemiesFolder = Workspace:FindFirstChild("Enemies")
                 if enemiesFolder then
                     local targetEnemy, shortestDist = nil, math.huge
-                    for _, enemy in pairs(enemiesFolde
+                    for _, enemy in pairs(enemiesFolder:GetChildren()) do
+                        local eRoot = enemy:FindFirstChild("HumanoidRootPart")
+         
