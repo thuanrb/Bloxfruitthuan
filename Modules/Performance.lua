@@ -1,25 +1,23 @@
 local Performance = {}
 
 function Performance:Init(Loader)
-    local RunService = game:GetService("RunService")
     local Lighting = game:GetService("Lighting")
     local Workspace = game:GetService("Workspace")
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
 
     task.spawn(function()
-        while task.wait(1) do
+        while task.wait(0.5) do
             if Loader.Config.BoostFPS then
                 pcall(function()
                     Lighting.GlobalShadows = false
                     Lighting.FogEnd = 9e9
                     settings():GetService("RenderSettings").RenderingEnabled = true
-                    
                     for _, v in pairs(Workspace:GetDescendants()) do
-                        if v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation") then
+                        if v:IsA("Part") or v:IsA("MeshPart") then
                             v.Material = Enum.Material.SmoothPlastic
                             v.Reflectance = 0
-                        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Fire") or v:IsA("Smoke") then
+                        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
                             v.Enabled = false
                         end
                     end
