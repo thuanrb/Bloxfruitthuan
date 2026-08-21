@@ -1,3 +1,4 @@
+-- Modules/Combat.lua
 local Combat = {}
 
 function Combat:Init(Loader)
