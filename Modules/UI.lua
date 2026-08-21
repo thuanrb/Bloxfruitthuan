@@ -61,7 +61,7 @@ function UI:Init(Loader)
     TitleLabel.Size = UDim2.new(0, 300, 1, 0)
     TitleLabel.Position = UDim2.new(0, 15, 0, 0)
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = "TEDDY HUB (BLOOS V3)"
+    TitleLabel.Text = "TEDDY HUB (BLOOS V3) - PREMIUM"
     TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     TitleLabel.TextSize = 14
     TitleLabel.Font = Enum.Font.GothamBold
@@ -73,7 +73,7 @@ function UI:Init(Loader)
     TabBar.Position = UDim2.new(0, 0, 0, 40)
     TabBar.BackgroundColor3 = Color3.fromRGB(20, 25, 33)
     TabBar.BorderSizePixel = 0
-    TabBar.CanvasSize = UDim2.new(0, 600, 0, 0)
+    TabBar.CanvasSize = UDim2.new(0, 700, 0, 0)
     TabBar.ScrollBarThickness = 2
     TabBar.Parent = MainFrame
 
@@ -91,7 +91,7 @@ function UI:Init(Loader)
 
     local function CreateTab(name)
         local TabBtn = Instance.new("TextButton")
-        TabBtn.Size = UDim2.new(0, 95, 1, 0)
+        TabBtn.Size = UDim2.new(0, 100, 1, 0)
         TabBtn.BackgroundColor3 = Color3.fromRGB(26, 32, 44)
         TabBtn.Text = name
         TabBtn.TextColor3 = Color3.fromRGB(170, 175, 185)
@@ -102,7 +102,7 @@ function UI:Init(Loader)
         local Page = Instance.new("ScrollingFrame")
         Page.Size = UDim2.new(1, 0, 1, 0)
         Page.BackgroundTransparency = 1
-        Page.CanvasSize = UDim2.new(0, 0, 0, 600)
+        Page.CanvasSize = UDim2.new(0, 0, 0, 800)
         Page.ScrollBarThickness = 4
         Page.Visible = false
         Page.Parent = PagesContainer
@@ -126,8 +126,9 @@ function UI:Init(Loader)
         return Page
     end
 
-    local FarmPage = CreateTab("Farm")
-    local StackPage = CreateTab("Stack Auto")
+    local FarmPage = CreateTab("Main Farm")
+    local SeaPage = CreateTab("Sea Events")
+    local ItemPage = CreateTab("Items & Belts")
     local HopPage = CreateTab("Hop & Boss")
     local StatPage = CreateTab("Settings")
 
@@ -165,19 +166,30 @@ function UI:Init(Loader)
         end)
     end
 
+    -- Tab Main Farm
     AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(state) Loader.Config.AutoFarm = state end)
     AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(state) Loader.Config.FastAttack = state end)
     AddToggle(FarmPage, "Attack Mob", Loader.Config.AttackMob, function(state) Loader.Config.AttackMob = state end)
     AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(state) Loader.Config.BringMobs = state end)
     AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(state) Loader.Config.AutoBuso = state end)
 
-    AddToggle(StackPage, "Auto Event Dog House / Bone", false, function(state) end)
-    AddToggle(StackPage, "Dragon Storm No Cooldown", false, function(state) end)
+    -- Tab Sea Events
+    AddToggle(SeaPage, "Auto Sea Event (Săn sự kiện biển)", Loader.Config.AutoSeaEvent, function(state) Loader.Config.AutoSeaEvent = state end)
+    AddToggle(SeaPage, "Auto Terrorshark", Loader.Config.AutoTerrorshark, function(state) Loader.Config.AutoTerrorshark = state end)
+    AddToggle(SeaPage, "Auto Leviathan", Loader.Config.AutoLeviathan, function(state) Loader.Config.AutoLeviathan = state end)
+    AddToggle(SeaPage, "Auto Kitsune Island", Loader.Config.AutoKitsune, function(state) Loader.Config.AutoKitsune = state end)
 
+    -- Tab Items & Belts
+    AddToggle(ItemPage, "Auto Dojo Belt (Lấy đai)", Loader.Config.AutoDojoBelt, function(state) Loader.Config.AutoDojoBelt = state end)
+    AddToggle(ItemPage, "Auto Cursed Dual Katana", false, function(state) end)
+    AddToggle(ItemPage, "Auto Soul Guitar", false, function(state) end)
+
+    -- Tab Hop & Boss
     AddToggle(HopPage, "Auto Server Hop Săn TTK", Loader.Config.HopTTK, function(state) Loader.Config.HopTTK = state end)
     AddToggle(HopPage, "Hop Boss (Dough King, Indra)", false, function(state) end)
 
-    AddToggle(StatPage, "Boost FPS", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
+    -- Tab Settings
+    AddToggle(StatPage, "Boost FPS (Tối ưu game)", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
 end
 
 return UI
