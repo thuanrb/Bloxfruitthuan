@@ -1,3 +1,4 @@
+-- Modules/UI.lua
 local UI = {}
 
 function UI:Init(Loader)
@@ -166,29 +167,24 @@ function UI:Init(Loader)
         end)
     end
 
-    -- Tab Main Farm
     AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(state) Loader.Config.AutoFarm = state end)
     AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(state) Loader.Config.FastAttack = state end)
     AddToggle(FarmPage, "Attack Mob", Loader.Config.AttackMob, function(state) Loader.Config.AttackMob = state end)
     AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(state) Loader.Config.BringMobs = state end)
     AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(state) Loader.Config.AutoBuso = state end)
 
-    -- Tab Sea Events
     AddToggle(SeaPage, "Auto Sea Event (Săn sự kiện biển)", Loader.Config.AutoSeaEvent, function(state) Loader.Config.AutoSeaEvent = state end)
     AddToggle(SeaPage, "Auto Terrorshark", Loader.Config.AutoTerrorshark, function(state) Loader.Config.AutoTerrorshark = state end)
     AddToggle(SeaPage, "Auto Leviathan", Loader.Config.AutoLeviathan, function(state) Loader.Config.AutoLeviathan = state end)
     AddToggle(SeaPage, "Auto Kitsune Island", Loader.Config.AutoKitsune, function(state) Loader.Config.AutoKitsune = state end)
 
-    -- Tab Items & Belts
     AddToggle(ItemPage, "Auto Dojo Belt (Lấy đai)", Loader.Config.AutoDojoBelt, function(state) Loader.Config.AutoDojoBelt = state end)
     AddToggle(ItemPage, "Auto Cursed Dual Katana", false, function(state) end)
     AddToggle(ItemPage, "Auto Soul Guitar", false, function(state) end)
 
-    -- Tab Hop & Boss
     AddToggle(HopPage, "Auto Server Hop Săn TTK", Loader.Config.HopTTK, function(state) Loader.Config.HopTTK = state end)
     AddToggle(HopPage, "Hop Boss (Dough King, Indra)", false, function(state) end)
 
-    -- Tab Settings
     AddToggle(StatPage, "Boost FPS (Tối ưu game)", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
 end
 
