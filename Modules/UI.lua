@@ -1,4 +1,3 @@
--- Modules/UI.lua
 local UI = {}
 
 function UI:Init(Loader)
@@ -26,10 +25,7 @@ function UI:Init(Loader)
     ToggleButton.TextSize = 14
     ToggleButton.Font = Enum.Font.GothamBold
     ToggleButton.Parent = ScreenGui
-
-    local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(1, 0)
-    ToggleCorner.Parent = ToggleButton
+    Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(1, 0)
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -39,10 +35,7 @@ function UI:Init(Loader)
     MainFrame.BorderSizePixel = 0
     MainFrame.Visible = true
     MainFrame.Parent = ScreenGui
-
-    local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 8)
-    MainCorner.Parent = MainFrame
+    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 
     ToggleButton.MouseButton1Click:Connect(function()
         MainFrame.Visible = not MainFrame.Visible
@@ -53,16 +46,13 @@ function UI:Init(Loader)
     TopBar.BackgroundColor3 = Color3.fromRGB(22, 27, 36)
     TopBar.BorderSizePixel = 0
     TopBar.Parent = MainFrame
-
-    local TopCorner = Instance.new("UICorner")
-    TopCorner.CornerRadius = UDim.new(0, 8)
-    TopCorner.Parent = TopBar
+    Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 8)
 
     local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Size = UDim2.new(0, 300, 1, 0)
+    TitleLabel.Size = UDim2.new(0, 350, 1, 0)
     TitleLabel.Position = UDim2.new(0, 15, 0, 0)
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = "TEDDY HUB (BLOOS V3) - PREMIUM"
+    TitleLabel.Text = "TEDDY HUB (BLOOS V6) - ULTIMATE STABLE"
     TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     TitleLabel.TextSize = 14
     TitleLabel.Font = Enum.Font.GothamBold
@@ -74,7 +64,7 @@ function UI:Init(Loader)
     TabBar.Position = UDim2.new(0, 0, 0, 40)
     TabBar.BackgroundColor3 = Color3.fromRGB(20, 25, 33)
     TabBar.BorderSizePixel = 0
-    TabBar.CanvasSize = UDim2.new(0, 700, 0, 0)
+    TabBar.CanvasSize = UDim2.new(0, 900, 0, 0)
     TabBar.ScrollBarThickness = 2
     TabBar.Parent = MainFrame
 
@@ -92,7 +82,7 @@ function UI:Init(Loader)
 
     local function CreateTab(name)
         local TabBtn = Instance.new("TextButton")
-        TabBtn.Size = UDim2.new(0, 100, 1, 0)
+        TabBtn.Size = UDim2.new(0, 110, 1, 0)
         TabBtn.BackgroundColor3 = Color3.fromRGB(26, 32, 44)
         TabBtn.Text = name
         TabBtn.TextColor3 = Color3.fromRGB(170, 175, 185)
@@ -129,8 +119,9 @@ function UI:Init(Loader)
 
     local FarmPage = CreateTab("Main Farm")
     local SeaPage = CreateTab("Sea Events")
-    local ItemPage = CreateTab("Items & Belts")
-    local HopPage = CreateTab("Hop & Boss")
+    local StatsPage = CreateTab("Auto Stats")
+    local ESPPage = CreateTab("ESP/Visuals")
+    local FruitPage = CreateTab("Devil Fruits")
     local StatPage = CreateTab("Settings")
 
     local function AddToggle(page, text, default, callback)
@@ -144,48 +135,48 @@ function UI:Init(Loader)
         ToggleBtn.Font = Enum.Font.GothamMedium
         ToggleBtn.TextXAlignment = Enum.TextXAlignment.Left
         ToggleBtn.Parent = page
-
-        local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 6)
-        Corner.Parent = ToggleBtn
+        Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 6)
 
         local Indicator = Instance.new("Frame")
         Indicator.Size = UDim2.new(0, 16, 0, 16)
         Indicator.Position = UDim2.new(1, -28, 0.5, -8)
         Indicator.BackgroundColor3 = default and Color3.fromRGB(0, 255, 128) or Color3.fromRGB(60, 70, 85)
         Indicator.Parent = ToggleBtn
-
-        local IndCorner = Instance.new("UICorner")
-        IndCorner.CornerRadius = UDim.new(1, 0)
-        IndCorner.Parent = Indicator
+        Instance.new("UICorner", Indicator).CornerRadius = UDim.new(1, 0)
 
         local state = default
         ToggleBtn.MouseButton1Click:Connect(function()
             state = not state
             Indicator.BackgroundColor3 = state and Color3.fromRGB(0, 255, 128) or Color3.fromRGB(60, 70, 85)
             if callback then callback(state) end
+            if Loader.SaveSettings then Loader:SaveSettings() end
         end)
     end
 
-    AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(state) Loader.Config.AutoFarm = state end)
-    AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(state) Loader.Config.FastAttack = state end)
-    AddToggle(FarmPage, "Attack Mob", Loader.Config.AttackMob, function(state) Loader.Config.AttackMob = state end)
-    AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(state) Loader.Config.BringMobs = state end)
-    AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(state) Loader.Config.AutoBuso = state end)
+    AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(s) Loader.Config.AutoFarm = s end)
+    AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(s) Loader.Config.FastAttack = s end)
+    AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(s) Loader.Config.BringMobs = s end)
+    AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(s) Loader.Config.AutoBuso = s end)
 
-    AddToggle(SeaPage, "Auto Sea Event (Săn sự kiện biển)", Loader.Config.AutoSeaEvent, function(state) Loader.Config.AutoSeaEvent = state end)
-    AddToggle(SeaPage, "Auto Terrorshark", Loader.Config.AutoTerrorshark, function(state) Loader.Config.AutoTerrorshark = state end)
-    AddToggle(SeaPage, "Auto Leviathan", Loader.Config.AutoLeviathan, function(state) Loader.Config.AutoLeviathan = state end)
-    AddToggle(SeaPage, "Auto Kitsune Island", Loader.Config.AutoKitsune, function(state) Loader.Config.AutoKitsune = state end)
+    AddToggle(SeaPage, "Auto Sea Event", Loader.Config.AutoSeaEvent, function(s) Loader.Config.AutoSeaEvent = s end)
+    AddToggle(SeaPage, "Auto Terrorshark", Loader.Config.AutoTerrorshark, function(s) Loader.Config.AutoTerrorshark = s end)
+    AddToggle(SeaPage, "Auto Dojo Belt", Loader.Config.AutoDojoBelt, function(s) Loader.Config.AutoDojoBelt = s end)
 
-    AddToggle(ItemPage, "Auto Dojo Belt (Lấy đai)", Loader.Config.AutoDojoBelt, function(state) Loader.Config.AutoDojoBelt = state end)
-    AddToggle(ItemPage, "Auto Cursed Dual Katana", false, function(state) end)
-    AddToggle(ItemPage, "Auto Soul Guitar", false, function(state) end)
+    AddToggle(StatsPage, "Auto Melee", Loader.Config.AutoMelee, function(s) Loader.Config.AutoMelee = s end)
+    AddToggle(StatsPage, "Auto Defense", Loader.Config.AutoDefense, function(s) Loader.Config.AutoDefense = s end)
+    AddToggle(StatsPage, "Auto Sword", Loader.Config.AutoSword, function(s) Loader.Config.AutoSword = s end)
+    AddToggle(StatsPage, "Auto Gun", Loader.Config.AutoGun, function(s) Loader.Config.AutoGun = s end)
+    AddToggle(StatsPage, "Auto Devil Fruit", Loader.Config.AutoDevilFruit, function(s) Loader.Config.AutoDevilFruit = s end)
 
-    AddToggle(HopPage, "Auto Server Hop Săn TTK", Loader.Config.HopTTK, function(state) Loader.Config.HopTTK = state end)
-    AddToggle(HopPage, "Hop Boss (Dough King, Indra)", false, function(state) end)
+    AddToggle(ESPPage, "ESP Players", Loader.Config.ESPPlayer, function(s) Loader.Config.ESPPlayer = s end)
+    AddToggle(ESPPage, "ESP Chests", Loader.Config.ESPChest, function(s) Loader.Config.ESPChest = s end)
+    AddToggle(ESPPage, "ESP Fruits", Loader.Config.ESPFruit, function(s) Loader.Config.ESPFruit = s end)
 
-    AddToggle(StatPage, "Boost FPS (Tối ưu game)", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
+    AddToggle(FruitPage, "Auto Random Fruit (Gacha)", Loader.Config.AutoGacha, function(s) Loader.Config.AutoGacha = s end)
+    AddToggle(FruitPage, "Auto Store Fruit", Loader.Config.AutoStoreFruit, function(s) Loader.Config.AutoStoreFruit = s end)
+
+    AddToggle(StatPage, "Auto Select Marine", Loader.Config.AutoMarine, function(s) Loader.Config.AutoMarine = s end)
+    AddToggle(StatPage, "Boost FPS", Loader.Config.BoostFPS, function(s) Loader.Config.BoostFPS = s end)
 end
 
 return UI
