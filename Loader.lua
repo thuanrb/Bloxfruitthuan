@@ -1,3 +1,4 @@
+-- Loader.lua
 local Loader = {}
 Loader.Config = {
     AutoFarm = false,
