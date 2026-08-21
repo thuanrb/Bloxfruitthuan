@@ -1,4 +1,3 @@
--- Modules/Combat.lua
 local Combat = {}
 
 function Combat:Init(Loader)
@@ -30,8 +29,15 @@ function Combat:Init(Loader)
             if Loader.Config.AutoFarm then
                 pcall(function()
                     local character = LocalPlayer.Character
-                    if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+                    if not character or not character:FindFirstChild("HumanoidRootPart") or not character:FindFirstChild("Humanoid") then return end
                     local rootPart = character.HumanoidRootPart
+                    local humanoid = character.Humanoid
+
+                    if humanoid.Health < (humanoid.MaxHealth * 0.25) then
+                        rootPart.CFrame = rootPart.CFrame + Vector3.new(0, 150, 0)
+                        task.wait(2)
+                        return
+                    end
 
                     if Loader.Config.AutoBuso and not character:FindFirstChild("HasBuso") then
                         ReplicatedStorage.Remotes.CommF_:InvokeServer("Buso")
