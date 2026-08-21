@@ -154,6 +154,7 @@ function UI:Init(Loader)
     end
 
     AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(s) Loader.Config.AutoFarm = s end)
+    AddToggle(FarmPage, "Auto Quest", Loader.Config.AutoQuest, function(s) Loader.Config.AutoQuest = s end)
     AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(s) Loader.Config.FastAttack = s end)
     AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(s) Loader.Config.BringMobs = s end)
     AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(s) Loader.Config.AutoBuso = s end)
@@ -162,6 +163,7 @@ function UI:Init(Loader)
     AddToggle(SeaPage, "Auto Terrorshark", Loader.Config.AutoTerrorshark, function(s) Loader.Config.AutoTerrorshark = s end)
     AddToggle(SeaPage, "Auto Dojo Belt", Loader.Config.AutoDojoBelt, function(s) Loader.Config.AutoDojoBelt = s end)
 
+    AddToggle(StatsPage, "Auto Stats Enabled", Loader.Config.AutoStatsEnabled, function(s) Loader.Config.AutoStatsEnabled = s end)
     AddToggle(StatsPage, "Auto Melee", Loader.Config.AutoMelee, function(s) Loader.Config.AutoMelee = s end)
     AddToggle(StatsPage, "Auto Defense", Loader.Config.AutoDefense, function(s) Loader.Config.AutoDefense = s end)
     AddToggle(StatsPage, "Auto Sword", Loader.Config.AutoSword, function(s) Loader.Config.AutoSword = s end)
