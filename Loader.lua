@@ -1,3 +1,4 @@
+-- Loader.lua
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Loader = {}
@@ -56,7 +57,6 @@ end
 function Loader:Start()
     self:LoadSettings()
 
-    -- Tự động chọn phe Hải quân ngay khi vào game nếu được bật
     task.spawn(function()
         if self.Config.AutoMarine then
             pcall(function()
@@ -68,7 +68,6 @@ function Loader:Start()
         end
     end)
 
-    -- Tải tuần tự các module chức năng
     task.spawn(function()
         pcall(function()
             local baseUrl = "https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/"
@@ -87,6 +86,12 @@ function Loader:Start()
 
             local Extras = loadstring(game:HttpGet(baseUrl .. "Extras.lua"))()
             if Extras then Extras:Init(self) end
+
+            local ServerHop = loadstring(game:HttpGet(baseUrl .. "ServerHop.lua"))()
+            if ServerHop then ServerHop:Init(self) end
+
+            local TeleportModule = loadstring(game:HttpGet(baseUrl .. "Teleport.lua"))()
+            if TeleportModule then TeleportModule:Init(self) end
         end)
     end)
 end
