@@ -1,19 +1,21 @@
 -- =========================================================================
--- TEDDY HUB V6 - ULTIMATE ENTERPRISE CORE (NO VIETNAMESE INSTRUCTIONS)
+-- TEDDY HUB V8 - COMMERCIAL ENTERPRISE CORE (NO VIETNAMESE INSTRUCTIONS)
 -- =========================================================================
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 local Window = Library:MakeWindow({
-    Name = "Teddy Hub | Ultimate Enterprise V6", 
+    Name = "Teddy Hub | Ultimate Enterprise V8 (Commercial Edition)", 
     HidePremium = false, 
     SaveConfig = true, 
     ConfigFolder = "TeddyHub_Config"
 })
 
 local MainTab = Window:MakeTab({ Name = "Auto Farm", Icon = "rbxassetid://4483345998", PremiumOnly = false })
-local EventTab = Window:MakeTab({ Name = "Events & Boss", Icon = "rbxassetid://4483345998", PremiumOnly = false })
+local EventTab = Window:MakeTab({ Name = "Boss & Sea Events", Icon = "rbxassetid://4483345998", PremiumOnly = false })
+local RaidTab = Window:MakeTab({ Name = "Auto Raid", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 local ItemsTab = Window:MakeTab({ Name = "Items & Fruits", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 local VisualTab = Window:MakeTab({ Name = "Visual & ESP", Icon = "rbxassetid://4483345998", PremiumOnly = false })
+local TeleportTab = Window:MakeTab({ Name = "Teleport", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 local MiscTab = Window:MakeTab({ Name = "Misc & Hop", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 
 _G.AutoFarm = false
@@ -26,6 +28,12 @@ _G.AutoSeaBeast = false
 _G.AutoChest = false
 _G.FruitSniper = false
 _G.PlayerESP = false
+_G.MobESP = false
+_G.ChestESP = false
+_G.FruitESP = false
+_G.AutoRaid = false
+_G.SelectedRaid = "Flame"
+_G.KillAuraRange = 60
 
 local Player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
@@ -55,7 +63,7 @@ setreadonly(mt, true)
 
 task.spawn(function()
     while task.wait(2) do
-        if (_G.AutoFarm or _G.AutoBoss or _G.AutoSeaBeast) and _G.AutoHaki then
+        if (_G.AutoFarm or _G.AutoBoss or _G.AutoSeaBeast or _G.AutoRaid) and _G.AutoHaki then
             pcall(function()
                 if not Player.Character:FindFirstChild("HasBuso") then
                     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
@@ -130,6 +138,23 @@ task.spawn(function()
                 end
             end)
         end
+        
+        if _G.AutoSeaBeast then
+            pcall(function()
+                for _, v in pairs(workspace.Enemies:GetChildren()) do
+                    if (string.find(v.Name, "Sea Beast") or string.find(v.Name, "Rumbling")) and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                         if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+                            Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 50, 0)
+                            if Player.Character:FindFirstChildOfClass("Tool") then
+                                VirtualUser:CaptureController()
+                                VirtualUser:Button1Down(Vector2.new(0,0))
+                            end
+                        end
+                        break
+                    end
+                end
+            end)
+        end
     end
 end)
 
@@ -142,12 +167,46 @@ task.spawn(function()
                 local anims = Player.Character.Humanoid:GetPlayingAnimationTracks()
                 for _, v in pairs(anims) do v:Stop() end
                 if combatTool then combatTool:Activate() end
+                
+                for _, v in pairs(workspace.Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") then
+                        if (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude <= _G.KillAuraRange then
+                            v.Humanoid.Health = 0
+                        end
+                    end
+                end
             end)
         end
     end
 end)
 
--- AUTO CHEST
+task.spawn(function()
+    while task.wait(1) do
+        if _G.AutoRaid then
+            pcall(function()
+                local args = {
+                    [1] = "Raids",
+                    [2] = "Start",
+                    [3] = _G.SelectedRaid
+                }
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+                
+                for _, v in pairs(workspace.Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") then
+                        if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+                            Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
+                            if Player.Character:FindFirstChildOfClass("Tool") then
+                                VirtualUser:CaptureController()
+                                VirtualUser:Button1Down(Vector2.new(0,0))
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
 task.spawn(function()
     while task.wait(0.5) do
         if _G.AutoChest then
@@ -166,7 +225,6 @@ task.spawn(function()
     end
 end)
 
--- FRUIT SNIPER
 task.spawn(function()
     while task.wait(1) do
         if _G.FruitSniper then
@@ -182,7 +240,6 @@ task.spawn(function()
     end
 end)
 
--- PLAYER ESP
 task.spawn(function()
     while task.wait(1) do
         pcall(function()
@@ -212,11 +269,60 @@ task.spawn(function()
                     end
                 end
             end
+            
+            if _G.MobESP then
+                for _, m in pairs(workspace.Enemies:GetChildren()) do
+                    if m:FindFirstChild("HumanoidRootPart") and not m.HumanoidRootPart:FindFirstChild("TeddyMobESP") then
+                        local esp = Instance.new("BillboardGui", m.HumanoidRootPart)
+                        esp.Name = "TeddyMobESP"
+                        esp.Size = UDim2.new(0, 50, 0, 15)
+                        esp.AlwaysOnTop = true
+                        esp.StudsOffset = Vector3.new(0, 3, 0)
+                        local text = Instance.new("TextLabel", esp)
+                        text.Size = UDim2.new(1,0,1,0)
+                        text.Text = m.Name
+                        text.TextColor3 = Color3.fromRGB(0, 255, 255)
+                        text.BackgroundTransparency = 1
+                        text.Font = Enum.Font.SourceSansBold
+                        text.TextSize = 12
+                    end
+                end
+            else
+                for _, m in pairs(workspace.Enemies:GetChildren()) do
+                    if m:FindFirstChild("HumanoidRootPart") and m.HumanoidRootPart:FindFirstChild("TeddyMobESP") then
+                        m.HumanoidRootPart.TeddyMobESP:Destroy()
+                    end
+                end
+            end
+            
+            if _G.FruitESP then
+                for _, f in pairs(workspace:GetChildren()) do
+                    if f:IsA("Tool") and string.find(f.Name, "Fruit") and f:FindFirstChild("Handle") and not f.Handle:FindFirstChild("TeddyFruitESP") then
+                        local esp = Instance.new("BillboardGui", f.Handle)
+                        esp.Name = "TeddyFruitESP"
+                        esp.Size = UDim2.new(0, 50, 0, 15)
+                        esp.AlwaysOnTop = true
+                        esp.StudsOffset = Vector3.new(0, 3, 0)
+                        local text = Instance.new("TextLabel", esp)
+                        text.Size = UDim2.new(1,0,1,0)
+                        text.Text = f.Name
+                        text.TextColor3 = Color3.fromRGB(0, 255, 0)
+                        text.BackgroundTransparency = 1
+                        text.Font = Enum.Font.SourceSansBold
+                        text.TextSize = 12
+                    end
+                end
+            else
+                for _, f in pairs(workspace:GetChildren()) do
+                    if f:IsA("Tool") and string.find(f.Name, "Fruit") and f:FindFirstChild("Handle") and f.Handle:FindFirstChild("TeddyFruitESP") then
+                        f.Handle.TeddyFruitESP:Destroy()
+                    end
+                end
+            end
         end)
     end
 end)
 
--- SERVER HOP FUNCTION
 local function ServerHop()
     pcall(function()
         local servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
@@ -232,13 +338,29 @@ end
 MainTab:AddToggle({ Name = "Enable Auto Farm", Default = false, Callback = function(Value) _G.AutoFarm = Value end })
 MainTab:AddToggle({ Name = "Bring Mobs", Default = false, Callback = function(Value) _G.BringMob = Value end })
 MainTab:AddSlider({ Name = "Farm Distance", Min = 0, Max = 30, Default = 5, Color = Color3.fromRGB(255,255,255), Increment = 1, ValueName = "Studs", Callback = function(Value) _G.FarmDistance = Value end })
+MainTab:AddSlider({ Name = "Kill Aura Range", Min = 10, Max = 200, Default = 60, Color = Color3.fromRGB(255,255,255), Increment = 5, ValueName = "Studs", Callback = function(Value) _G.KillAuraRange = Value end })
 
 EventTab:AddToggle({ Name = "Auto Boss Hunter", Default = false, Callback = function(Value) _G.AutoBoss = Value end })
+EventTab:AddToggle({ Name = "Auto Sea Beast Hunter", Default = false, Callback = function(Value) _G.AutoSeaBeast = Value end })
+
+RaidTab:AddDropdown({
+    Name = "Select Raid Chip",
+    Default = "Flame",
+    Options = {"Flame", "Ice", "Quake", "Light", "Dark", "String", "Rumble", "Magma", "Buddha", "Bird: Phoenix", "Portal", "Pain", "Spider", "Sound", "Blizzard"},
+    Callback = function(Value) _G.SelectedRaid = Value end    
+})
+RaidTab:AddToggle({ Name = "Enable Auto Raid", Default = false, Callback = function(Value) _G.AutoRaid = Value end })
 
 ItemsTab:AddToggle({ Name = "Auto Collect Chests", Default = false, Callback = function(Value) _G.AutoChest = Value end })
 ItemsTab:AddToggle({ Name = "Auto Fruit Sniper", Default = false, Callback = function(Value) _G.FruitSniper = Value end })
 
 VisualTab:AddToggle({ Name = "Enable Player ESP", Default = false, Callback = function(Value) _G.PlayerESP = Value end })
+VisualTab:AddToggle({ Name = "Enable Mob ESP", Default = false, Callback = function(Value) _G.MobESP = Value end })
+VisualTab:AddToggle({ Name = "Enable Fruit ESP", Default = false, Callback = function(Value) _G.FruitESP = Value end })
+
+TeleportTab:AddButton({ Name = "Teleport to Cafe", Callback = function() pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-387.8, 77.2, 305.6) end) end })
+TeleportTab:AddButton({ Name = "Teleport to Mansion", Callback = function() pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-12471.1, 337.3, -7551.6) end) end })
+TeleportTab:AddButton({ Name = "Teleport to Castle on the Sea", Callback = function(Value) pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-5064.4, 314.5, -3156.2) end) end })
 
 MiscTab:AddToggle({ Name = "Auto Buso Haki", Default = true, Callback = function(Value) _G.AutoHaki = Value end })
 MiscTab:AddToggle({ Name = "Super Fast Attack", Default = true, Callback = function(Value) _G.FastAttack = Value end })
