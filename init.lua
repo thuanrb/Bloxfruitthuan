@@ -1,10 +1,11 @@
--- Teddy Hub - Ultimate Universe Master Edition (Full Premium Features & God Mode)
+-- Teddy Hub - God Mode Enterprise Master (Ultimate Paid Hub Engine)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local VirtualUser = game:GetService("VirtualUser")
 local CoreGui = game:GetService("CoreGui")
+local TeleportService = game:GetService("TeleportService")
 local LocalPlayer = Players.LocalPlayer
 
 local Config = {
@@ -15,6 +16,7 @@ local Config = {
     AutoBoss = false,
     AutoMastery = false,
     AutoRaceV4 = false,
+    ServerHop = false,
     SeaEvent_Leviathan = false,
     SeaEvent_SeaBeast = false,
     FindMirage = false,
@@ -63,32 +65,32 @@ task.spawn(function()
     end)
 end)
 
--- Universe Master Multi-Tab Commercial UI Setup
+-- God Mode Enterprise Multi-Tab UI Setup
 pcall(function()
-    if CoreGui:FindFirstChild("TeddyHub_UniverseMaster") then
-        CoreGui.TeddyHub_UniverseMaster:Destroy()
+    if CoreGui:FindFirstChild("TeddyHub_GodEnterprise") then
+        CoreGui.TeddyHub_GodEnterprise:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "TeddyHub_UniverseMaster"
+    ScreenGui.Name = "TeddyHub_GodEnterprise"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = CoreGui
 
     local ToggleBtn = Instance.new("TextButton")
     ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
     ToggleBtn.Position = UDim2.new(0, 15, 0, 180)
-    ToggleBtn.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    ToggleBtn.BackgroundColor3 = Color3.fromRGB(5, 5, 12)
     ToggleBtn.Text = "GOD"
-    ToggleBtn.TextColor3 = Color3.fromRGB(255, 0, 128)
+    ToggleBtn.TextColor3 = Color3.fromRGB(255, 0, 100)
     ToggleBtn.TextSize = 12
     ToggleBtn.Font = Enum.Font.GothamBold
     ToggleBtn.Parent = ScreenGui
     Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
 
     local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 460, 0, 380)
-    MainFrame.Position = UDim2.new(0.5, -230, 0.5, -190)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(10, 12, 18)
+    MainFrame.Size = UDim2.new(0, 470, 0, 390)
+    MainFrame.Position = UDim2.new(0.5, -235, 0.5, -195)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(8, 10, 15)
     MainFrame.Visible = true
     MainFrame.Parent = ScreenGui
     Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
@@ -100,9 +102,9 @@ pcall(function()
     local Title = Instance.new("TextLabel")
     Title.Size = UDim2.new(1, 0, 0, 38)
     Title.BackgroundTransparency = 1
-    Title.Text = "TEDDY HUB [UNIVERSE GOD EDITION]"
+    Title.Text = "TEDDY HUB [GOD ENTERPRISE EDITION]"
     Title.TextColor3 = Color3.fromRGB(255, 215, 0)
-    Title.TextSize = 14
+    Title.TextSize = 13
     Title.Font = Enum.Font.GothamBold
     Title.Parent = MainFrame
 
@@ -111,15 +113,15 @@ pcall(function()
     TabContainer.Size = UDim2.new(1, -20, 0, 32)
     TabContainer.Position = UDim2.new(0, 10, 0, 42)
     TabContainer.BackgroundTransparency = 1
-    TabContainer.CanvasSize = UDim2.new(0, 520, 0, 0)
+    TabContainer.CanvasSize = UDim2.new(0, 540, 0, 0)
     TabContainer.ScrollBarThickness = 0
     TabContainer.Parent = MainFrame
 
     local function CreateTabButton(name, posX)
         local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(0, 80, 1, 0)
+        btn.Size = UDim2.new(0, 82, 1, 0)
         btn.Position = UDim2.new(0, posX, 0, 0)
-        btn.BackgroundColor3 = Color3.fromRGB(20, 24, 34)
+        btn.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
         btn.Text = name
         btn.TextColor3 = Color3.fromRGB(170, 170, 170)
         btn.TextSize = 11
@@ -130,11 +132,11 @@ pcall(function()
     end
 
     local tabFarm = CreateTabButton("Farm/Boss", 0)
-    local tabSea = CreateTabButton("Sea Events", 85)
-    local tabStats = CreateTabButton("Race V4/Stats", 170)
-    local tabShop = CreateTabButton("Shop/Sniper", 255)
-    local tabMisc = CreateTabButton("Visual/PVP", 340)
-    local tabExtra = CreateTabButton("Mastery", 425)
+    local tabSea = CreateTabButton("Sea Events", 87)
+    local tabStats = CreateTabButton("Race V4/Stats", 174)
+    local tabShop = CreateTabButton("Shop/Sniper", 261)
+    local tabMisc = CreateTabButton("Visual/PVP", 348)
+    local tabExtra = CreateTabButton("Mastery/Hop", 435)
 
     local ContentPages = Instance.new("Folder")
     ContentPages.Name = "Pages"
@@ -185,7 +187,7 @@ pcall(function()
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 34)
         btn.Position = UDim2.new(0, 0, 0, posY)
-        btn.BackgroundColor3 = Color3.fromRGB(18, 22, 32)
+        btn.BackgroundColor3 = Color3.fromRGB(15, 18, 26)
         btn.Text = "    " .. name
         btn.TextColor3 = Color3.fromRGB(240, 240, 240)
         btn.TextSize = 11
@@ -212,7 +214,7 @@ pcall(function()
     AddToggleToPage(pageFarm, "Auto Boss Hunter (All Bosses)", "AutoBoss", 38)
     AddToggleToPage(pageFarm, "Auto Raid (Awakening)", "AutoRaid", 76)
     AddToggleToPage(pageFarm, "Auto Collect Chests", "AutoChest", 114)
-    AddToggleToPage(pageFarm, "Fast Attack (God Mode)", "FastAttack", 152)
+    AddToggleToPage(pageFarm, "Fast Attack (God Bypass)", "FastAttack", 152)
     AddToggleToPage(pageFarm, "Bring Mobs", "BringMobs", 190)
 
     -- Tab 2: Sea Events & Island Finder
@@ -236,8 +238,9 @@ pcall(function()
     AddToggleToPage(pageMisc, "Auto Buso Haki", "AutoBuso", 114)
     AddToggleToPage(pageMisc, "Auto Select Marines Team", "AutoMarine", 152)
 
-    -- Tab 6: Mastery Extra
+    -- Tab 6: Mastery & Server Hop
     AddToggleToPage(pageExtra, "Auto Farm Mastery (Skills Spammer)", "AutoMastery", 0)
+    AddToggleToPage(pageExtra, "Auto Server Hop (Low Player/Reset)", "ServerHop", 38)
 end)
 
 -- Anti-AFK Engine
@@ -249,6 +252,29 @@ task.spawn(function()
             VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
         end)
     end)
+end)
+
+-- Auto Server Hop Logic
+task.spawn(function()
+    while task.wait(30) do
+        if Config.ServerHop then
+            pcall(function()
+                local servers = {}
+                local req = game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")
+                local body = game:GetService("HttpService"):JSONDecode(req)
+                if body and body.data then
+                    for _, s in pairs(body.data) do
+                        if type(s) == "table" and s.playing < s.maxPlayers and s.id ~= game.JobId then
+                            table.insert(servers, s.id)
+                        end
+                    end
+                    if #servers > 0 then
+                        TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], LocalPlayer)
+                    end
+                end
+            end)
+        end
+    end
 end)
 
 -- Auto Mastery Skill Spammer
@@ -272,13 +298,9 @@ task.spawn(function()
     while task.wait(2) do
         if Config.AutoRaceV4 then
             pcall(function()
-                local char = LocalPlayer.Character
-                if char and char:FindFirstChild("HumanoidRootPart") then
-                    -- Tự động tìm cổng Trial hoặc kích hoạt gear V4 nếu đầy thanh năng lượng
-                    local remotes = ReplicatedStorage:FindFirstChild("Remotes")
-                    if remotes and remotes:FindFirstChild("CommF_") then
-                        remotes.CommF_:InvokeServer("ActivateAbility")
-                    end
+                local remotes = ReplicatedStorage:FindFirstChild("Remotes")
+                if remotes and remotes:FindFirstChild("CommF_") then
+                    remotes.CommF_:InvokeServer("ActivateAbility")
                 end
             end)
         end
@@ -485,20 +507,4 @@ task.spawn(function()
                 local enemiesFolder = Workspace:FindFirstChild("Enemies")
                 if enemiesFolder then
                     local targetEnemy, shortestDist = nil, math.huge
-                    for _, enemy in pairs(enemiesFolder:GetChildren()) do
-                        local eRoot = enemy:FindFirstChild("HumanoidRootPart")
-                        local eHum = enemy:FindFirstChild("Humanoid")
-                        if eRoot and eHum and eHum.Health > 0 and not enemy.Name:find("Boss") then
-                            local dist = (eRoot.Position - rootPart.Position).Magnitude
-                            if dist < shortestDist then
-                                shortestDist = dist
-                                targetEnemy = enemy
-                            end
-                        end
-                    end
-
-                    if targetEnemy then
-                        local eRoot = targetEnemy.HumanoidRootPart
-                        if Config.BringMobs then
-                            for _, otherEnemy in pairs(enemiesFolder:GetChildren()) do
- 
+                    for _, enemy in pairs(enemiesFolde
