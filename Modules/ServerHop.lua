@@ -1,53 +1,53 @@
-local ServerHopModule = {}
+local ServerHop = {}
 
-function ServerHopModule:Init(Hub)
-    local TeleportService = Hub.Services.TeleportService
-    local HttpService = Hub.Services.HttpService
-    local LocalPlayer = Hub.Services.Players.LocalPlayer
+function ServerHop:Init(Loader)
+    local HttpService = game:GetService("HttpService")
+    local TeleportService = game:GetService("TeleportService")
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
 
-    local function hop()
+    -- Hàm tự động tìm và đổi sang server khác có ít người hơn / ping tốt hơn
+    function ServerHop:Hop()
         pcall(function()
-            local placeId = game.PlaceId
-            local serversUrl = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"
+            local servers = {}
+            local cursor = ""
             
-            local success, result = pcall(function()
-                return HttpService:JSONDecode(game:HttpGet(serversUrl))
-            end)
-
-            if success and result and result.data then
-                for _, server in ipairs(result.data) do
-                    if server.playing < server.maxPlayers and server.id ~= game.JobId then
-                        TeleportService:TeleportToPlaceInstance(placeId, server.id, LocalPlayer)
-                        break
-                    end
+            -- Lấy danh sách server công khai qua API của Roblox
+            repeat
+                local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+                if cursor ~= "" then
+                    url = url .. "&cursor=" + cursor
                 end
+                
+                local success, response = pcall(function()
+                    return HttpService:JSONDecode(game:HttpGet(url))
+                end)
+                
+                if success and response and response.data then
+                    for _, server in ipairs(response.data) do
+                        if type(server) == "table" and server.maxPlayers and server.playing and server.playing < server.maxPlayers - 2 then
+                            if server.id ~= game.JobId then
+                                table.insert(servers, server.id)
+                            end
+                        end
+                    end
+                    cursor = response.nextPageCursor or ""
+                else
+                    break
+                end
+            until cursor == "" or #servers > 0
+
+            if #servers > 0 then
+                local targetServer = servers[math.random(1, #servers)]
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, targetServer, LocalPlayer)
+            else
+                -- Fallback nếu không quét được danh sách, dùng teleport thông thường
+                TeleportService:Teleport(game.PlaceId, LocalPlayer)
             end
         end)
     end
 
-    Hub.HopServer = hop
-
-    local function checkLegendarySwordDealer()
-        local npcs = game:GetService("Workspace"):FindFirstChild("NPCs")
-        if npcs and npcs:FindFirstChild("Legendary Sword Dealer") then
-            return true
-        end
-        return false
-    end
-
-    task.spawn(function()
-        while task.wait(5) do
-            if Hub.Config.HopTTK then
-                pcall(function()
-                    if checkLegendarySwordDealer() then
-                        print("Legendary Sword Dealer Found!")
-                    else
-                        hop()
-                    end
-                end)
-            end
-        end
-    end)
+    -- Nếu cấu hình bật tính năng HopTTK hoặc muốn đổi server tự động khi kẹt, có thể gọi hàm ServerHop:Hop() ở đây
 end
 
-return ServerHopModule
+return ServerHop
