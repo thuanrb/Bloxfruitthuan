@@ -6,12 +6,15 @@ Loader.Config = {
     AttackMob = true,
     BringMobs = true,
     AutoBuso = true,
-    AutoV3 = false,
-    AutoV4 = false,
     FastAttack = true,
     BoostFPS = false,
     HopTTK = false,
-    DistanceY = 35
+    DistanceY = 35,
+    AutoSeaEvent = false,
+    AutoTerrorshark = false,
+    AutoLeviathan = false,
+    AutoKitsune = false,
+    AutoDojoBelt = false
 }
 
 function Loader:Start()
@@ -25,6 +28,9 @@ function Loader:Start()
 
             local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
             if Combat then Combat:Init(self) end
+
+            local Event = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Event.lua"))()
+            if Event then Event:Init(self) end
         end)
     end)
 end
