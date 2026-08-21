@@ -25,7 +25,7 @@ function Combat:Init(Loader)
     end
 
     task.spawn(function()
-        while task.wait(0.2) do
+        while task.wait(0.15) do
             if Loader.Config.AutoFarm then
                 pcall(function()
                     local character = LocalPlayer.Character
@@ -35,7 +35,7 @@ function Combat:Init(Loader)
 
                     if humanoid.Health < (humanoid.MaxHealth * 0.25) then
                         rootPart.CFrame = rootPart.CFrame + Vector3.new(0, 150, 0)
-                        task.wait(2)
+                        task.wait(1.5)
                         return
                     end
 
@@ -70,16 +70,19 @@ function Combat:Init(Loader)
                                     local oRoot = otherEnemy:FindFirstChild("HumanoidRootPart")
                                     local oHum = otherEnemy:FindFirstChild("Humanoid")
                                     if oRoot and oHum and oHum.Health > 0 and otherEnemy.Name == targetEnemy.Name then
-                                        if (oRoot.Position - eRoot.Position).Magnitude < 350 then
+                                        if (oRoot.Position - eRoot.Position).Magnitude < 400 then
                                             oRoot.CFrame = eRoot.CFrame
                                             oRoot.CanCollide = false
+                                            pcall(function()
+                                                oRoot.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                                            end)
                                         end
                                     end
                                 end
                             end
 
                             rootPart.CFrame = eRoot.CFrame * CFrame.new(0, Loader.Config.DistanceY or 30, 0)
-                            rootPart.Velocity = Vector3.new(0, 0, 0)
+                            rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
 
                             if Loader.Config.AttackMob then
                                 VirtualUser:CaptureController()
@@ -93,7 +96,7 @@ function Combat:Init(Loader)
     end)
 
     task.spawn(function()
-        RunService.RenderStepped:Connect(function()
+        RunService.Stepped:Connect(function()
             if Loader.Config.AutoFarm and Loader.Config.FastAttack then
                 pcall(function()
                     local combatTool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
