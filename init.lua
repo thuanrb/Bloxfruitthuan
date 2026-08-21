@@ -1,15 +1,88 @@
 -- =========================================================================
--- TEDDY HUB V8 - COMMERCIAL ENTERPRISE CORE (NO VIETNAMESE INSTRUCTIONS)
+-- TEDDY HUB V10 - ULTIMATE ENTERPRISE CORE (RINNEGAN EDITION)
 -- =========================================================================
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 local Window = Library:MakeWindow({
-    Name = "Teddy Hub | Ultimate Enterprise V8 (Commercial Edition)", 
+    Name = "Teddy Hub | Ultimate Enterprise V10 (Rinnegan Edition)", 
     HidePremium = false, 
     SaveConfig = true, 
     ConfigFolder = "TeddyHub_Config"
 })
 
+-- =========================================================================
+-- RINNEGAN VISUAL SYSTEM (CUSTOM UI OVERLAY & ANIMATIONS)
+-- =========================================================================
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local RinneganScreenGui = Instance.new("ScreenGui")
+RinneganScreenGui.Name = "TeddyRinneganOverlay"
+RinneganScreenGui.Parent = CoreGui
+RinneganScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+RinneganScreenGui.IgnoreGuiInset = true
+
+-- Floating Rotating Rinnegan Button (Menu Toggle / Floating Widget)
+local RinneganButton = Instance.new("ImageButton")
+RinneganButton.Name = "RinneganButton"
+RinneganButton.Parent = RinneganScreenGui
+RinneganButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+RinneganButton.BackgroundTransparency = 1
+RinneganButton.Position = UDim2.new(0, 30, 0.5, -35)
+RinneganButton.Size = UDim2.new(0, 70, 0, 70)
+RinneganButton.Image = "rbxassetid://6023426915" -- Standard glowing ring / custom asset placeholder for eye texture
+RinneganButton.Draggable = true
+
+-- Inner Ripples to simulate Rinnegan pattern rings
+local RinneganRing = Instance.new("UIStroke")
+RinneganRing.Parent = RinneganButton
+RinneganRing.Color = Color3.fromRGB(150, 0, 255)
+RinneganRing.Thickness = 3
+
+-- Big Center Rinnegan Overlay (Appears during runtime/running or toggles)
+local BigRinnegan = Instance.new("ImageLabel")
+BigRinnegan.Name = "BigRinneganRunning"
+BigRinnegan.Parent = RinneganScreenGui
+BigRinnegan.BackgroundTransparency = 1
+BigRinnegan.AnchorPoint = Vector2.new(0.5, 0.5)
+BigRinnegan.Position = UDim2.new(0.85, 0, 0.15, 0)
+BigRinnegan.Size = UDim2.new(0, 90, 0, 90)
+BigRinnegan.Image = "rbxassetid://6023426915"
+BigRinnegan.ImageTransparency = 0.3
+
+local BigRinneganRing = Instance.new("UIStroke")
+BigRinneganRing.Parent = BigRinnegan
+BigRinneganRing.Color = Color3.fromRGB(180, 50, 255)
+BigRinneganRing.Thickness = 4
+
+-- Continuous Rotation Animations
+RunService.RenderStepped:Connect(function()
+    RinneganButton.Rotation = RinneganButton.Rotation + 2
+    BigRinnegan.Rotation = BigRinnegan.Rotation - 1.5
+end)
+
+-- Toggle Menu Visibility via Rinnegan Button
+local menuVisible = true
+RinneganButton.MouseButton1Click:Connect(function()
+    menuVisible = not menuVisible
+    pcall(function()
+        -- Orion library UI container hook to hide/show
+        local mainUI = CoreGui:FindFirstChild("Orion")
+        if mainUI then
+            mainUI.Enabled = menuVisible
+        end
+    end)
+    
+    -- Click pulse effect
+    TweenService:Create(RinneganButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 85, 0, 85)}):Play()
+    task.wait(0.1)
+    TweenService:Create(RinneganButton, TweenInfo.new(0.1), {Size = UDim2.new(0, 70, 0, 70)}):Play()
+end)
+
+-- =========================================================================
+-- TABS & CONFIGURATION SETUP
+-- =========================================================================
 local MainTab = Window:MakeTab({ Name = "Auto Farm", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 local EventTab = Window:MakeTab({ Name = "Boss & Sea Events", Icon = "rbxassetid://4483345998", PremiumOnly = false })
 local RaidTab = Window:MakeTab({ Name = "Auto Raid", Icon = "rbxassetid://4483345998", PremiumOnly = false })
@@ -33,10 +106,11 @@ _G.ChestESP = false
 _G.FruitESP = false
 _G.AutoRaid = false
 _G.SelectedRaid = "Flame"
-_G.KillAuraRange = 60
+_G.KillAuraRange = 90
+_G.AutoAwakening = false
+_G.GodmodeBypass = true
 
 local Player = game.Players.LocalPlayer
-local TweenService = game:GetService("TweenService")
 local VirtualUser = game:GetService("VirtualUser")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
@@ -99,10 +173,10 @@ task.spawn(function()
                     if _G.BringMob then
                         for _, v in pairs(workspace.Enemies:GetChildren()) do
                             if v.Name == mob.Name and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
-                                if (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude < 400 then
+                                if (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude < 500 then
                                     v.HumanoidRootPart.CFrame = mob.HumanoidRootPart.CFrame
                                     v.HumanoidRootPart.CanCollide = false
-                                    v.HumanoidRootPart.Size = Vector3.new(10, 10, 10)
+                                    v.HumanoidRootPart.Size = Vector3.new(15, 15, 15)
                                 end
                             end
                         end
@@ -204,20 +278,26 @@ task.spawn(function()
                 end
             end)
         end
+        
+        if _G.AutoAwakening then
+            pcall(function()
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Awakening", "Key")
+            end)
+        end
     end
 end)
 
 task.spawn(function()
-    while task.wait(0.5) do
+    while task.wait(0.4) do
         if _G.AutoChest then
             pcall(function()
                 for _, v in pairs(workspace:GetChildren()) do
                     if string.find(v.Name, "Chest") and v:IsA("Model") and v:FindFirstChild("Part") then
                         Player.Character.HumanoidRootPart.CFrame = v.Part.CFrame
-                        task.wait(0.2)
+                        task.wait(0.1)
                     elseif string.find(v.Name, "Chest") and v:IsA("Part") then
                         Player.Character.HumanoidRootPart.CFrame = v.CFrame
-                        task.wait(0.2)
+                        task.wait(0.1)
                     end
                 end
             end)
@@ -226,13 +306,13 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(0.4) do
         if _G.FruitSniper then
             pcall(function()
                 for _, v in pairs(workspace:GetChildren()) do
                     if v:IsA("Tool") and string.find(v.Name, "Fruit") and v:FindFirstChild("Handle") then
                         Player.Character.HumanoidRootPart.CFrame = v.Handle.CFrame
-                        task.wait(0.5)
+                        task.wait(0.2)
                     end
                 end
             end)
@@ -338,7 +418,7 @@ end
 MainTab:AddToggle({ Name = "Enable Auto Farm", Default = false, Callback = function(Value) _G.AutoFarm = Value end })
 MainTab:AddToggle({ Name = "Bring Mobs", Default = false, Callback = function(Value) _G.BringMob = Value end })
 MainTab:AddSlider({ Name = "Farm Distance", Min = 0, Max = 30, Default = 5, Color = Color3.fromRGB(255,255,255), Increment = 1, ValueName = "Studs", Callback = function(Value) _G.FarmDistance = Value end })
-MainTab:AddSlider({ Name = "Kill Aura Range", Min = 10, Max = 200, Default = 60, Color = Color3.fromRGB(255,255,255), Increment = 5, ValueName = "Studs", Callback = function(Value) _G.KillAuraRange = Value end })
+MainTab:AddSlider({ Name = "Kill Aura Range", Min = 10, Max = 200, Default = 90, Color = Color3.fromRGB(255,255,255), Increment = 5, ValueName = "Studs", Callback = function(Value) _G.KillAuraRange = Value end })
 
 EventTab:AddToggle({ Name = "Auto Boss Hunter", Default = false, Callback = function(Value) _G.AutoBoss = Value end })
 EventTab:AddToggle({ Name = "Auto Sea Beast Hunter", Default = false, Callback = function(Value) _G.AutoSeaBeast = Value end })
@@ -350,20 +430,11 @@ RaidTab:AddDropdown({
     Callback = function(Value) _G.SelectedRaid = Value end    
 })
 RaidTab:AddToggle({ Name = "Enable Auto Raid", Default = false, Callback = function(Value) _G.AutoRaid = Value end })
+RaidTab:AddToggle({ Name = "Auto Awakening", Default = false, Callback = function(Value) _G.AutoAwakening = Value end })
 
 ItemsTab:AddToggle({ Name = "Auto Collect Chests", Default = false, Callback = function(Value) _G.AutoChest = Value end })
 ItemsTab:AddToggle({ Name = "Auto Fruit Sniper", Default = false, Callback = function(Value) _G.FruitSniper = Value end })
 
 VisualTab:AddToggle({ Name = "Enable Player ESP", Default = false, Callback = function(Value) _G.PlayerESP = Value end })
 VisualTab:AddToggle({ Name = "Enable Mob ESP", Default = false, Callback = function(Value) _G.MobESP = Value end })
-VisualTab:AddToggle({ Name = "Enable Fruit ESP", Default = false, Callback = function(Value) _G.FruitESP = Value end })
-
-TeleportTab:AddButton({ Name = "Teleport to Cafe", Callback = function() pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-387.8, 77.2, 305.6) end) end })
-TeleportTab:AddButton({ Name = "Teleport to Mansion", Callback = function() pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-12471.1, 337.3, -7551.6) end) end })
-TeleportTab:AddButton({ Name = "Teleport to Castle on the Sea", Callback = function(Value) pcall(function() Player.Character.HumanoidRootPart.CFrame = CFrame.new(-5064.4, 314.5, -3156.2) end) end })
-
-MiscTab:AddToggle({ Name = "Auto Buso Haki", Default = true, Callback = function(Value) _G.AutoHaki = Value end })
-MiscTab:AddToggle({ Name = "Super Fast Attack", Default = true, Callback = function(Value) _G.FastAttack = Value end })
-MiscTab:AddButton({ Name = "Server Hop", Callback = function() ServerHop() end })
-
-Library:Init()
+VisualTab:AddToggle({ Name = "Enable Fruit ESP", Default = false, Callback = function(Value) _G.FruitESP 
