@@ -68,7 +68,6 @@ function UI:Init(Loader)
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     TitleLabel.Parent = TopBar
 
-    -- Thanh Tab Ngang (Mô phỏng y hệt Teddy Hub)
     local TabBar = Instance.new("ScrollingFrame")
     TabBar.Size = UDim2.new(1, 0, 0, 35)
     TabBar.Position = UDim2.new(0, 0, 0, 40)
@@ -166,20 +165,19 @@ function UI:Init(Loader)
         end)
     end
 
-    -- Khởi tạo các tính năng giống hệt hệ thống của Teddy
-    AddToggle(FarmPage, "Start Farm (Bật Auto Farm)", Loader.Config.AutoFarm, function(state) Loader.Config.AutoFarm = state end)
-    AddToggle(FarmPage, "Fast Attack (Đánh nhanh cực tốc)", Loader.Config.FastAttack, function(state) Loader.Config.FastAttack = state end)
-    AddToggle(FarmPage, "Attack Mob (Tự động chém quái)", Loader.Config.AttackMob, function(state) Loader.Config.AttackMob = state end)
-    AddToggle(FarmPage, "Bring Mobs (Hút quái gom lại 1 chỗ)", Loader.Config.BringMobs, function(state) Loader.Config.BringMobs = state end)
-    AddToggle(FarmPage, "Auto Turn on Buso (Haki vũ trang)", Loader.Config.AutoBuso, function(state) Loader.Config.AutoBuso = state end)
+    AddToggle(FarmPage, "Start Farm", Loader.Config.AutoFarm, function(state) Loader.Config.AutoFarm = state end)
+    AddToggle(FarmPage, "Fast Attack", Loader.Config.FastAttack, function(state) Loader.Config.FastAttack = state end)
+    AddToggle(FarmPage, "Attack Mob", Loader.Config.AttackMob, function(state) Loader.Config.AttackMob = state end)
+    AddToggle(FarmPage, "Bring Mobs", Loader.Config.BringMobs, function(state) Loader.Config.BringMobs = state end)
+    AddToggle(FarmPage, "Auto Turn on Buso", Loader.Config.AutoBuso, function(state) Loader.Config.AutoBuso = state end)
 
-    AddToggle(StackPage, "Auto Event Dog House / Bone", false, function(state) print("Stack Farm:", state) end)
-    AddToggle(StackPage, "Dragon Storm No Cooldown", false, function(state) print("Skill CD:", state) end)
+    AddToggle(StackPage, "Auto Event Dog House / Bone", false, function(state) end)
+    AddToggle(StackPage, "Dragon Storm No Cooldown", false, function(state) end)
 
-    AddToggle(HopPage, "Auto Server Hop Săn TTK / Đảo", Loader.Config.HopTTK, function(state) Loader.Config.HopTTK = state end)
-    AddToggle(HopPage, "Hop Boss (Dough King, Rip Indra)", false, function(state) print("Hop Boss:", state) end)
+    AddToggle(HopPage, "Auto Server Hop Săn TTK", Loader.Config.HopTTK, function(state) Loader.Config.HopTTK = state end)
+    AddToggle(HopPage, "Hop Boss (Dough King, Indra)", false, function(state) end)
 
-    AddToggle(StatPage, "Boost FPS / Xóa lag đồ họa", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
+    AddToggle(StatPage, "Boost FPS", Loader.Config.BoostFPS, function(state) Loader.Config.BoostFPS = state end)
 end
 
 return UI
