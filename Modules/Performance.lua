@@ -1,3 +1,4 @@
+-- Modules/Performance.lua
 local Performance = {}
 
 function Performance:Init(Loader)
