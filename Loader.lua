@@ -1,25 +1,31 @@
 local Loader = {}
 Loader.Config = {
     AutoFarm = false,
-    AutoFarmNearest = false,
-    AutoStats = false,
-    FastAttack = false,
-    BringMobs = false,
-    ESPEnabled = false,
-    ChestESP = false,
+    AutoFarmMethod = "Level",
+    SelectedTool = "Melee",
+    AttackMob = true,
+    BringMobs = true,
+    AutoBuso = true,
+    AutoV3 = false,
+    AutoV4 = false,
+    FastAttack = true,
     BoostFPS = false,
     HopTTK = false,
-    SelectedWeapon = "Melee",
-    SelectedStat = "Melee"
+    DistanceY = 35
 }
 
 function Loader:Start()
-    pcall(function()
-        local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/UI.lua"))()
-        if UI then UI:Init(self) end
+    task.spawn(function()
+        pcall(function()
+            local UI = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/UI.lua"))()
+            if UI then UI:Init(self) end
 
-        local Performance = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Performance.lua"))()
-        if Performance then Performance:Init(self) end
+            local Performance = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Performance.lua"))()
+            if Performance then Performance:Init(self) end
+
+            local Combat = loadstring(game:HttpGet("https://raw.githubusercontent.com/thuanrb/Bloxfruitthuan/main/Modules/Combat.lua"))()
+            if Combat then Combat:Init(self) end
+        end)
     end)
 end
 
