@@ -1,276 +1,83 @@
--- Teddy Hub - God Mode Enterprise Ultimate v3 (Advanced Core Architecture)
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local RunService = game:GetService("RunService")
-local VirtualUser = game:GetService("VirtualUser")
-local CoreGui = game:GetService("CoreGui")
-local TeleportService = game:GetService("TeleportService")
-local LocalPlayer = Players.LocalPlayer
+-- =========================================================================
+-- TEDDY HUB V2 - PREMIUM ENTERPRISE CORE (NO DELAY & BYPASS)
+-- =========================================================================
 
-local Config = {
-    AutoFarm = false,
-    AutoRaid = false,
-    AutoChest = false,
-    AutoStats = false,
-    AutoBoss = false,
-    AutoMastery = false,
-    AutoRaceV4 = false,
-    ServerHop = false,
-    SeaEvent_Leviathan = false,
-    SeaEvent_SeaBeast = false,
-    FindMirage = false,
-    FindLegend = false,
-    FruitSniper = false,
-    AutoBuyHaki = false,
-    PlayerESP = false,
-    Fullbright = false,
-    RemoveFog = false,
-    FastAttack = true,
-    BringMobs = true,
-    AutoBuso = true,
-    AutoMarine = true,
-    DistanceY = 28
-}
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local Window = Library:MakeWindow({
+    Name = "Teddy Hub | Premium Enterprise", 
+    HidePremium = false, 
+    SaveConfig = true, 
+    ConfigFolder = "TeddyHub_Config"
+})
 
--- Safe Execution Core Wrapper
-local function SafeCall(func)
-    local success, err = pcall(func)
-    if not success and err then
-        -- Silent error catch to prevent script crashes
+local MainTab = Window:MakeTab({
+    Name = "Auto Farm",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local CombatTab = Window:MakeTab({
+    Name = "Combat",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+_G.AutoFarm = false
+_G.FastAttack = false
+_G.FarmDistance = 5
+
+-- [1] METATABLE ANTI-CHEAT HOOK (SERVER BYPASS)
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+setreadonly(mt, false)
+
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    
+    if method == "Kick" or method == "kick" then
+        return nil 
     end
+    
+    if method == "FireServer" and tostring(self) == "MainEvent" then
+        if args[1] == "Banned" or args[1] == "WalkSpeed" or args[1] == "JumpPower" then
+            return nil
+        end
+    end
+    
+    return oldNamecall(self, unpack(args))
+end)
+setreadonly(mt, true)
+
+-- [2] TARGETING ALGORITHM
+local function getClosestMob()
+    local closest = nil
+    local dist = math.huge
+    for _, v in pairs(workspace.Enemies:GetChildren()) do
+        if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") then
+            local magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+            if magnitude < dist then
+                dist = magnitude
+                closest = v
+            end
+        end
+    end
+    return closest
 end
 
--- Automated Team Initialization
+-- [3] AUTO FARM LOOP (OPTIMIZED)
 task.spawn(function()
-    SafeCall(function()
-        if Config.AutoMarine then
-            local remotes = ReplicatedStorage:WaitForChild("Remotes", 5)
-            if remotes and remotes:FindFirstChild("CommF_") then
-                remotes.CommF_:InvokeServer("SetTeam", "Marines")
-            end
-        end
-    end)
-end)
-
--- Fullbright & Remove Fog Visual Engine
-task.spawn(function()
-    SafeCall(function()
-        RunService.RenderStepped:Connect(function()
-            if Config.Fullbright then
-                game:GetService("Lighting").Brightness = 2
-                game:GetService("Lighting").ClockTime = 14
-                game:GetService("Lighting").GlobalShadows = false
-            end
-            if Config.RemoveFog then
-                for _, v in pairs(game:GetService("Lighting"):GetChildren()) do
-                    if v:IsA("Atmosphere") or v:IsA("Sky") or v:IsA("PostEffect") then
-                        v.Enabled = false
-                    end
-                end
-            end
-        end)
-    end)
-end)
-
--- Commercial Enterprise UI Setup
-SafeCall(function()
-    if CoreGui:FindFirstChild("TeddyHub_EnterpriseUltimate") then
-        CoreGui.TeddyHub_EnterpriseUltimate:Destroy()
-    end
-
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "TeddyHub_EnterpriseUltimate"
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.Parent = CoreGui
-
-    local ToggleBtn = Instance.new("TextButton")
-    ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
-    ToggleBtn.Position = UDim2.new(0, 15, 0, 180)
-    ToggleBtn.BackgroundColor3 = Color3.fromRGB(4, 6, 12)
-    ToggleBtn.Text = "MAX"
-    ToggleBtn.TextColor3 = Color3.fromRGB(0, 255, 180)
-    ToggleBtn.TextSize = 12
-    ToggleBtn.Font = Enum.Font.GothamBold
-    ToggleBtn.Parent = ScreenGui
-    Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
-
-    local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 470, 0, 390)
-    MainFrame.Position = UDim2.new(0.5, -235, 0.5, -195)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(7, 9, 14)
-    MainFrame.Visible = true
-    MainFrame.Parent = ScreenGui
-    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
-
-    ToggleBtn.MouseButton1Click:Connect(function()
-        MainFrame.Visible = not MainFrame.Visible
-    end)
-
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, 0, 0, 38)
-    Title.BackgroundTransparency = 1
-    Title.Text = "TEDDY HUB [ENTERPRISE ULTIMATE]"
-    Title.TextColor3 = Color3.fromRGB(255, 215, 0)
-    Title.TextSize = 13
-    Title.Font = Enum.Font.GothamBold
-    Title.Parent = MainFrame
-
-    local TabContainer = Instance.new("ScrollingFrame")
-    TabContainer.Size = UDim2.new(1, -20, 0, 32)
-    TabContainer.Position = UDim2.new(0, 10, 0, 42)
-    TabContainer.BackgroundTransparency = 1
-    TabContainer.CanvasSize = UDim2.new(0, 540, 0, 0)
-    TabContainer.ScrollBarThickness = 0
-    TabContainer.Parent = MainFrame
-
-    local function CreateTabButton(name, posX)
-        local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(0, 82, 1, 0)
-        btn.Position = UDim2.new(0, posX, 0, 0)
-        btn.BackgroundColor3 = Color3.fromRGB(15, 20, 28)
-        btn.Text = name
-        btn.TextColor3 = Color3.fromRGB(170, 170, 170)
-        btn.TextSize = 11
-        btn.Font = Enum.Font.GothamBold
-        btn.Parent = TabContainer
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
-        return btn
-    end
-
-    local tabFarm = CreateTabButton("Farm/Boss", 0)
-    local tabSea = CreateTabButton("Sea Events", 87)
-    local tabStats = CreateTabButton("Race V4/Stats", 174)
-    local tabShop = CreateTabButton("Shop/Sniper", 261)
-    local tabMisc = CreateTabButton("Visual/PVP", 348)
-    local tabExtra = CreateTabButton("Mastery/Hop", 435)
-
-    local ContentPages = Instance.new("Folder")
-    ContentPages.Name = "Pages"
-    ContentPages.Parent = MainFrame
-
-    local function CreatePage()
-        local page = Instance.new("ScrollingFrame")
-        page.Size = UDim2.new(1, -20, 1, -85)
-        page.Position = UDim2.new(0, 10, 0, 80)
-        page.BackgroundTransparency = 1
-        page.BorderSizePixel = 0
-        page.CanvasSize = UDim2.new(0, 0, 0, 350)
-        page.ScrollBarThickness = 4
-        page.Visible = false
-        page.Parent = ContentPages
-        return page
-    end
-
-    local pageFarm = CreatePage()
-    local pageSea = CreatePage()
-    local pageStats = CreatePage()
-    local pageShop = CreatePage()
-    local pageMisc = CreatePage()
-    local pageExtra = CreatePage()
-
-    pageFarm.Visible = true
-
-    local tabs = { 
-        {tabFarm, pageFarm}, 
-        {tabSea, pageSea}, 
-        {tabStats, pageStats}, 
-        {tabShop, pageShop}, 
-        {tabMisc, pageMisc},
-        {tabExtra, pageExtra}
-    }
-    
-    for _, t in ipairs(tabs) do
-        t[1].MouseButton1Click:Connect(function()
-            for _, o in ipairs(tabs) do
-                o[2].Visible = (o[2] == t[2])
-                o[1].TextColor3 = (o[1] == t[1]) and Color3.fromRGB(0, 255, 200) or Color3.fromRGB(170, 170, 170)
-            end
-        end)
-    end
-    tabFarm.TextColor3 = Color3.fromRGB(0, 255, 200)
-
-    local function AddToggleToPage(parentPage, name, configKey, posY)
-        local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(1, 0, 0, 34)
-        btn.Position = UDim2.new(0, 0, 0, posY)
-        btn.BackgroundColor3 = Color3.fromRGB(12, 16, 24)
-        btn.Text = "    " .. name
-        btn.TextColor3 = Color3.fromRGB(240, 240, 240)
-        btn.TextSize = 11
-        btn.Font = Enum.Font.GothamMedium
-        btn.TextXAlignment = Enum.TextXAlignment.Left
-        btn.Parent = parentPage
-        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-
-        local indicator = Instance.new("Frame")
-        indicator.Size = UDim2.new(0, 12, 0, 12)
-        indicator.Position = UDim2.new(1, -22, 0.5, -6)
-        indicator.BackgroundColor3 = Config[configKey] and Color3.fromRGB(0, 255, 128) or Color3.fromRGB(60, 70, 90)
-        indicator.Parent = btn
-        Instance.new("UICorner", indicator).CornerRadius = UDim.new(1, 0)
-
-        btn.MouseButton1Click:Connect(function()
-            Config[configKey] = not Config[configKey]
-            indicator.BackgroundColor3 = Config[configKey] and Color3.fromRGB(0, 255, 128) or Color3.fromRGB(60, 70, 90)
-        end)
-    end
-
-    AddToggleToPage(pageFarm, "Auto Farm Level", "AutoFarm", 0)
-    AddToggleToPage(pageFarm, "Auto Boss Hunter (All Bosses)", "AutoBoss", 38)
-    AddToggleToPage(pageFarm, "Auto Raid (Awakening)", "AutoRaid", 76)
-    AddToggleToPage(pageFarm, "Auto Collect Chests", "AutoChest", 114)
-    AddToggleToPage(pageFarm, "Fast Attack (Optimized Stream)", "FastAttack", 152)
-    AddToggleToPage(pageFarm, "Bring Mobs", "BringMobs", 190)
-
-    AddToggleToPage(pageSea, "Auto Sea Beast Hunter", "SeaEvent_SeaBeast", 0)
-    AddToggleToPage(pageSea, "Auto Leviathan Hunter", "SeaEvent_Leviathan", 38)
-    AddToggleToPage(pageSea, "Auto Find Mirage Island", "FindMirage", 76)
-    AddToggleToPage(pageSea, "Auto Find Legend/Kitsune Shrine", "FindLegend", 114)
-
-    AddToggleToPage(pageStats, "Auto Stats (Melee/Defense/Sword)", "AutoStats", 0)
-    AddToggleToPage(pageStats, "Auto Race V4 & Trial Solver", "AutoRaceV4", 38)
-
-    AddToggleToPage(pageShop, "Auto Devil Fruit Sniper (Collect Drops)", "FruitSniper", 0)
-    AddToggleToPage(pageShop, "Auto Buy Haki / Enhancements", "AutoBuyHaki", 38)
-
-    AddToggleToPage(pageMisc, "Player ESP (View Enemy Players)", "PlayerESP", 0)
-    AddToggleToPage(pageMisc, "Fullbright (No Darkness)", "Fullbright", 38)
-    AddToggleToPage(pageMisc, "Remove Fog & Atmosphere", "RemoveFog", 76)
-    AddToggleToPage(pageMisc, "Auto Buso Haki", "AutoBuso", 114)
-    AddToggleToPage(pageMisc, "Auto Select Marines Team", "AutoMarine", 152)
-
-    AddToggleToPage(pageExtra, "Auto Farm Mastery (Skills Spammer)", "AutoMastery", 0)
-    AddToggleToPage(pageExtra, "Auto Server Hop (Low Player/Reset)", "ServerHop", 38)
-end)
-
--- Anti-AFK Engine
-task.spawn(function()
-    SafeCall(function()
-        LocalPlayer.Idled:Connect(function()
-            VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-            task.wait(1)
-            VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-        end)
-    end)
-end)
-
--- Auto Server Hop Logic
-task.spawn(function()
-    while task.wait(30) do
-        if Config.ServerHop then
-            SafeCall(function()
-                local servers = {}
-                local req = game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100")
-                local body = game:GetService("HttpService"):JSONDecode(req)
-                if body and body.data then
-                    for _, s in pairs(body.data) do
-                        if type(s) == "table" and s.playing < s.maxPlayers and s.id ~= game.JobId then
-                            table.insert(servers, s.id)
-                        end
-                    end
-                    if #servers > 0 then
-                        TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], LocalPlayer)
+    while task.wait() do
+        if _G.AutoFarm then
+            pcall(function()
+                local mob = getClosestMob()
+                if mob then
+                    local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart
+                    hrp.CFrame = mob.HumanoidRootPart.CFrame * CFrame.new(0, 5, _G.FarmDistance)
+                    
+                    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+                        game:GetService("VirtualUser"):CaptureController()
+                        game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0))
                     end
                 end
             end)
@@ -278,236 +85,57 @@ task.spawn(function()
     end
 end)
 
--- Auto Mastery Skill Spammer
+-- [4] SUPER FAST ATTACK (NO DELAY / NO ANIMATION)
 task.spawn(function()
-    while task.wait(0.3) do
-        if Config.AutoMastery then
-            SafeCall(function()
-                local vim = game:GetService("VirtualInputManager")
-                for _, key in ipairs({Enum.KeyCode.Z, Enum.KeyCode.X, Enum.KeyCode.C, Enum.KeyCode.V}) do
-                    vim:SendKeyEvent(true, key, false, game)
-                    task.wait(0.04)
-                    vim:SendKeyEvent(false, key, false, game)
+    while task.wait(0.01) do
+        if _G.FastAttack then
+            pcall(function()
+                local combatTool = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                if combatTool and combatTool:FindFirstChild("Cooldown") then
+                    combatTool.Cooldown.Value = 0 
                 end
-            end)
-        end
-    end
-end)
-
--- Auto Race V4 & Trial Solver Tracker
-task.spawn(function()
-    while task.wait(2) do
-        if Config.AutoRaceV4 then
-            SafeCall(function()
-                local remotes = ReplicatedStorage:FindFirstChild("Remotes")
-                if remotes and remotes:FindFirstChild("CommF_") then
-                    remotes.CommF_:InvokeServer("ActivateAbility")
-                end
-            end)
-        end
-    end
-end)
-
--- Fruit Sniper
-task.spawn(function()
-    while task.wait(0.5) do
-        if Config.FruitSniper then
-            SafeCall(function()
-                for _, v in pairs(Workspace:GetChildren()) do
-                    if v:IsA("Tool") and v:FindFirstChild("Handle") then
-                        local char = LocalPlayer.Character
-                        if char and char:FindFirstChild("HumanoidRootPart") then
-                            char.HumanoidRootPart.CFrame = v.Handle.CFrame
-                        end
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- Player ESP Logic
-task.spawn(function()
-    RunService.RenderStepped:Connect(function()
-        SafeCall(function()
-            if Config.PlayerESP then
-                for _, p in pairs(Players:GetPlayers()) do
-                    if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                        local hrp = p.Character.HumanoidRootPart
-                        if not hrp:FindFirstChild("TeddyESP") then
-                            local bg = Instance.new("BillboardGui", hrp)
-                            bg.Name = "TeddyESP"
-                            bg.Size = UDim2.new(0, 50, 0, 25)
-                            bg.AlwaysOnTop = true
-                            bg.StudsOffset = Vector3.new(0, 3, 0)
-                            local tl = Instance.new("TextLabel", bg)
-                            tl.Size = UDim2.new(1, 0, 1, 0)
-                            tl.BackgroundTransparency = 1
-                            tl.TextColor3 = Color3.fromRGB(255, 0, 0)
-                            tl.TextScaled = true
-                            tl.Font = Enum.Font.GothamBold
-                            tl.Text = p.Name
-                        end
-                    end
-                end
-            else
-                for _, p in pairs(Players:GetPlayers()) do
-                    if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                        local esp = p.Character.HumanoidRootPart:FindFirstChild("TeddyESP")
-                        if esp then esp:Destroy() end
-                    end
-                end
-            end
-        end)
-    end)
-end)
-
--- Auto Boss Hunter
-task.spawn(function()
-    while task.wait(1) do
-        if Config.AutoBoss then
-            SafeCall(function()
-                local bossFolder = Workspace:FindFirstChild("Enemies")
-                if bossFolder then
-                    for _, enemy in pairs(bossFolder:GetChildren()) do
-                        local hum = enemy:FindFirstChild("Humanoid")
-                        local root = enemy:FindFirstChild("HumanoidRootPart")
-                        if hum and root and hum.Health > 0 and (enemy.Name:find("Boss") or enemy.Name:find("King") or enemy.Name:find("Rip_Indra") or enemy.Name:find("Elite")) then
-                            local char = LocalPlayer.Character
-                            if char and char:FindFirstChild("HumanoidRootPart") then
-                                char.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, Config.DistanceY, 0)
-                            end
-                        end
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- Auto Sea Events
-task.spawn(function()
-    while task.wait(1) do
-        if Config.SeaEvent_SeaBeast or Config.SeaEvent_Leviathan then
-            SafeCall(function()
-                local enemiesFolder = Workspace:FindFirstChild("Enemies")
-                if enemiesFolder then
-                    for _, enemy in pairs(enemiesFolder:GetChildren()) do
-                        if enemy.Name:find("Sea Beast") or enemy.Name:find("Leviathan") or enemy.Name:find("Terror Shark") then
-                            local eRoot = enemy:FindFirstChild("HumanoidRootPart")
-                            local char = LocalPlayer.Character
-                            if eRoot and char and char:FindFirstChild("HumanoidRootPart") then
-                                char.HumanoidRootPart.CFrame = eRoot.CFrame * CFrame.new(0, 50, 0)
-                            end
-                        end
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- Auto Find Islands
-task.spawn(function()
-    while task.wait(3) do
-        if Config.FindMirage or Config.FindLegend then
-            SafeCall(function()
-                local mapFolder = Workspace:FindFirstChild("_Map") or Workspace
-                for _, obj in pairs(mapFolder:GetChildren()) do
-                    if (Config.FindMirage and obj.Name:find("Mirage")) or (Config.FindLegend and (obj.Name:find("Prehistoric") or obj.Name:find("Kitsune"))) then
-                        local char = LocalPlayer.Character
-                        if obj:IsA("Model") and obj.PrimaryPart and char and char:FindFirstChild("HumanoidRootPart") then
-                            char.HumanoidRootPart.CFrame = obj.PrimaryPart.CFrame + Vector3.new(0, 300, 0)
-                        end
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- Auto Stats Core
-task.spawn(function()
-    while task.wait(3) do
-        if Config.AutoStats then
-            SafeCall(function()
-                local remotes = ReplicatedStorage:FindFirstChild("Remotes")
-                if remotes and remotes:FindFirstChild("CommF_") then
-                    remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
-                    remotes.CommF_:InvokeServer("AddPoint", "Defense", 3)
-                    remotes.CommF_:InvokeServer("AddPoint", "Sword", 3)
-                end
-            end)
-        end
-    end
-end)
-
--- Auto Chest Collector
-task.spawn(function()
-    while task.wait(0.5) do
-        if Config.AutoChest and not Config.AutoFarm then
-            SafeCall(function()
-                local char = LocalPlayer.Character
-                if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-                local rootPart = char.HumanoidRootPart
                 
-                local chestFolder = Workspace:FindFirstChild("ChestSpawns") or Workspace
-                for _, obj in pairs(chestFolder:GetChildren()) do
-                    if obj.Name:find("Chest") and obj:IsA("BasePart") then
-                        rootPart.CFrame = obj.CFrame
-                        task.wait(0.2)
-                        break
-                    end
+                local anims = game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+                for _, v in pairs(anims) do
+                    v:Stop()
+                end
+                
+                if combatTool then
+                    combatTool:Activate()
                 end
             end)
         end
     end
 end)
 
--- Auto Raid Core
-task.spawn(function()
-    while task.wait(1) do
-        if Config.AutoRaid then
-            SafeCall(function()
-                local remotes = ReplicatedStorage:FindFirstChild("Remotes")
-                if remotes and remotes:FindFirstChild("CommF_") then
-                    remotes.CommF_:InvokeServer("RaidsNpc", "Select")
-                end
-            end)
-        end
-    end
-end)
+-- [5] UI TOGGLES
+MainTab:AddToggle({
+    Name = "Enable Auto Farm",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoFarm = Value
+    end    
+})
 
--- High-Performance Farm Loop
-task.spawn(function()
-    while task.wait(0.08) do
-        if Config.AutoFarm and not Config.AutoBoss then
-            SafeCall(function()
-                local char = LocalPlayer.Character
-                if not char or not char:FindFirstChild("HumanoidRootPart") or not char:FindFirstChild("Humanoid") then return end
-                local rootPart = char.HumanoidRootPart
-                local humanoid = char.Humanoid
+MainTab:AddSlider({
+    Name = "Farm Distance",
+    Min = 0,
+    Max = 20,
+    Default = 5,
+    Color = Color3.fromRGB(255,255,255),
+    Increment = 1,
+    ValueName = "Studs",
+    Callback = function(Value)
+        _G.FarmDistance = Value
+    end    
+})
 
-                if humanoid.Health < (humanoid.MaxHealth * 0.25) then
-                    rootPart.CFrame = rootPart.CFrame + Vector3.new(0, 180, 0)
-                    task.wait(1.5)
-                    return
-                end
+CombatTab:AddToggle({
+    Name = "Enable Super Fast Attack",
+    Default = false,
+    Callback = function(Value)
+        _G.FastAttack = Value
+    end    
+})
 
-                if Config.AutoBuso and not char:FindFirstChild("HasBuso") then
-                    ReplicatedStorage.Remotes.CommF_:InvokeServer("Buso")
-                end
-
-                local weaponName = Config.SelectedTool or "Melee"
-                local backpack = LocalPlayer:FindFirstChild("Backpack")
-                if backpack and not char:FindFirstChildOfClass("Tool") then
-                    local tool = backpack:FindFirstChild(weaponName) or backpack:FindFirstChildOfClass("Tool")
-                    if tool then humanoid:EquipTool(tool) end
-                end
-
-                local enemiesFolder = Workspace:FindFirstChild("Enemies")
-                if enemiesFolder then
-                    local targetEnemy, shortestDist = nil, math.huge
-                    for _, enemy in pairs(enemiesFolder:GetChildren()) do
-                        local eRoot = enemy:FindFirstChild("HumanoidRootPart")
-         
+Library:Init()
