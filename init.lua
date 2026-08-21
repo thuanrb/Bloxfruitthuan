@@ -1,4 +1,4 @@
--- Teddy Hub - Ultimate Commercial Master Edition (All-in-One Features)
+-- Teddy Hub - Ultimate Universe Master Edition (Full Premium Features & God Mode)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -12,6 +12,9 @@ local Config = {
     AutoRaid = false,
     AutoChest = false,
     AutoStats = false,
+    AutoBoss = false,
+    AutoMastery = false,
+    AutoRaceV4 = false,
     SeaEvent_Leviathan = false,
     SeaEvent_SeaBeast = false,
     FindMirage = false,
@@ -40,7 +43,7 @@ task.spawn(function()
     end)
 end)
 
--- Fullbright & Remove Fog Mod
+-- Fullbright & Remove Fog Visual Engine
 task.spawn(function()
     pcall(function()
         RunService.RenderStepped:Connect(function()
@@ -60,35 +63,35 @@ task.spawn(function()
     end)
 end)
 
--- Professional Multi-Tab Commercial UI Setup
+-- Universe Master Multi-Tab Commercial UI Setup
 pcall(function()
-    if CoreGui:FindFirstChild("TeddyHub_CommercialMaster") then
-        CoreGui.TeddyHub_CommercialMaster:Destroy()
+    if CoreGui:FindFirstChild("TeddyHub_UniverseMaster") then
+        CoreGui.TeddyHub_UniverseMaster:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "TeddyHub_CommercialMaster"
+    ScreenGui.Name = "TeddyHub_UniverseMaster"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = CoreGui
 
     local ToggleBtn = Instance.new("TextButton")
     ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
     ToggleBtn.Position = UDim2.new(0, 15, 0, 180)
-    ToggleBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-    ToggleBtn.Text = "MAX"
-    ToggleBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+    ToggleBtn.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    ToggleBtn.Text = "GOD"
+    ToggleBtn.TextColor3 = Color3.fromRGB(255, 0, 128)
     ToggleBtn.TextSize = 12
     ToggleBtn.Font = Enum.Font.GothamBold
     ToggleBtn.Parent = ScreenGui
     Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
 
     local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 440, 0, 350)
-    MainFrame.Position = UDim2.new(0.5, -220, 0.5, -175)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(12, 14, 20)
+    MainFrame.Size = UDim2.new(0, 460, 0, 380)
+    MainFrame.Position = UDim2.new(0.5, -230, 0.5, -190)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(10, 12, 18)
     MainFrame.Visible = true
     MainFrame.Parent = ScreenGui
-    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
 
     ToggleBtn.MouseButton1Click:Connect(function()
         MainFrame.Visible = not MainFrame.Visible
@@ -97,18 +100,18 @@ pcall(function()
     local Title = Instance.new("TextLabel")
     Title.Size = UDim2.new(1, 0, 0, 38)
     Title.BackgroundTransparency = 1
-    Title.Text = "TEDDY HUB [COMMERCIAL ULTIMATE]"
+    Title.Text = "TEDDY HUB [UNIVERSE GOD EDITION]"
     Title.TextColor3 = Color3.fromRGB(255, 215, 0)
     Title.TextSize = 14
     Title.Font = Enum.Font.GothamBold
     Title.Parent = MainFrame
 
-    -- Tab Bar Containers
+    -- Tab Bar Containers (Scrollable for 6 Tabs)
     local TabContainer = Instance.new("ScrollingFrame")
-    TabContainer.Size = UDim2.new(1, -20, 0, 30)
+    TabContainer.Size = UDim2.new(1, -20, 0, 32)
     TabContainer.Position = UDim2.new(0, 10, 0, 42)
     TabContainer.BackgroundTransparency = 1
-    TabContainer.CanvasSize = UDim2.new(0, 450, 0, 0)
+    TabContainer.CanvasSize = UDim2.new(0, 520, 0, 0)
     TabContainer.ScrollBarThickness = 0
     TabContainer.Parent = MainFrame
 
@@ -116,9 +119,9 @@ pcall(function()
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(0, 80, 1, 0)
         btn.Position = UDim2.new(0, posX, 0, 0)
-        btn.BackgroundColor3 = Color3.fromRGB(22, 26, 36)
+        btn.BackgroundColor3 = Color3.fromRGB(20, 24, 34)
         btn.Text = name
-        btn.TextColor3 = Color3.fromRGB(180, 180, 180)
+        btn.TextColor3 = Color3.fromRGB(170, 170, 170)
         btn.TextSize = 11
         btn.Font = Enum.Font.GothamBold
         btn.Parent = TabContainer
@@ -126,10 +129,12 @@ pcall(function()
         return btn
     end
 
-    local tabFarm = CreateTabButton("Farm", 0)
+    local tabFarm = CreateTabButton("Farm/Boss", 0)
     local tabSea = CreateTabButton("Sea Events", 85)
-    local tabShop = CreateTabButton("Shop/Sniper", 170)
-    local tabMisc = CreateTabButton("Visual/Misc", 255)
+    local tabStats = CreateTabButton("Race V4/Stats", 170)
+    local tabShop = CreateTabButton("Shop/Sniper", 255)
+    local tabMisc = CreateTabButton("Visual/PVP", 340)
+    local tabExtra = CreateTabButton("Mastery", 425)
 
     local ContentPages = Instance.new("Folder")
     ContentPages.Name = "Pages"
@@ -141,7 +146,7 @@ pcall(function()
         page.Position = UDim2.new(0, 10, 0, 80)
         page.BackgroundTransparency = 1
         page.BorderSizePixel = 0
-        page.CanvasSize = UDim2.new(0, 0, 0, 320)
+        page.CanvasSize = UDim2.new(0, 0, 0, 350)
         page.ScrollBarThickness = 4
         page.Visible = false
         page.Parent = ContentPages
@@ -150,17 +155,27 @@ pcall(function()
 
     local pageFarm = CreatePage()
     local pageSea = CreatePage()
+    local pageStats = CreatePage()
     local pageShop = CreatePage()
     local pageMisc = CreatePage()
+    local pageExtra = CreatePage()
 
     pageFarm.Visible = true
 
-    local tabs = { {tabFarm, pageFarm}, {tabSea, pageSea}, {tabShop, pageShop}, {tabMisc, pageMisc} }
+    local tabs = { 
+        {tabFarm, pageFarm}, 
+        {tabSea, pageSea}, 
+        {tabStats, pageStats}, 
+        {tabShop, pageShop}, 
+        {tabMisc, pageMisc},
+        {tabExtra, pageExtra}
+    }
+    
     for _, t in ipairs(tabs) do
         t[1].MouseButton1Click:Connect(function()
             for _, o in ipairs(tabs) do
                 o[2].Visible = (o[2] == t[2])
-                o[1].TextColor3 = (o[1] == t[1]) and Color3.fromRGB(0, 255, 200) or Color3.fromRGB(180, 180, 180)
+                o[1].TextColor3 = (o[1] == t[1]) and Color3.fromRGB(0, 255, 200) or Color3.fromRGB(170, 170, 170)
             end
         end)
     end
@@ -170,7 +185,7 @@ pcall(function()
         local btn = Instance.new("TextButton")
         btn.Size = UDim2.new(1, 0, 0, 34)
         btn.Position = UDim2.new(0, 0, 0, posY)
-        btn.BackgroundColor3 = Color3.fromRGB(20, 24, 34)
+        btn.BackgroundColor3 = Color3.fromRGB(18, 22, 32)
         btn.Text = "    " .. name
         btn.TextColor3 = Color3.fromRGB(240, 240, 240)
         btn.TextSize = 11
@@ -192,12 +207,12 @@ pcall(function()
         end)
     end
 
-    -- Tab 1: Farm & General Combat
+    -- Tab 1: Farm & Boss
     AddToggleToPage(pageFarm, "Auto Farm Level", "AutoFarm", 0)
-    AddToggleToPage(pageFarm, "Auto Raid (Awakening)", "AutoRaid", 38)
-    AddToggleToPage(pageFarm, "Auto Collect Chests", "AutoChest", 76)
-    AddToggleToPage(pageFarm, "Auto Stats (Melee/Defense)", "AutoStats", 114)
-    AddToggleToPage(pageFarm, "Fast Attack (Master)", "FastAttack", 152)
+    AddToggleToPage(pageFarm, "Auto Boss Hunter (All Bosses)", "AutoBoss", 38)
+    AddToggleToPage(pageFarm, "Auto Raid (Awakening)", "AutoRaid", 76)
+    AddToggleToPage(pageFarm, "Auto Collect Chests", "AutoChest", 114)
+    AddToggleToPage(pageFarm, "Fast Attack (God Mode)", "FastAttack", 152)
     AddToggleToPage(pageFarm, "Bring Mobs", "BringMobs", 190)
 
     -- Tab 2: Sea Events & Island Finder
@@ -206,16 +221,23 @@ pcall(function()
     AddToggleToPage(pageSea, "Auto Find Mirage Island", "FindMirage", 76)
     AddToggleToPage(pageSea, "Auto Find Legend/Kitsune Shrine", "FindLegend", 114)
 
-    -- Tab 3: Shop & Fruit Sniper
+    -- Tab 3: Race V4 & Stats
+    AddToggleToPage(pageStats, "Auto Stats (Melee/Defense/Sword)", "AutoStats", 0)
+    AddToggleToPage(pageStats, "Auto Race V4 & Trial Solver", "AutoRaceV4", 38)
+
+    -- Tab 4: Shop & Sniper
     AddToggleToPage(pageShop, "Auto Devil Fruit Sniper (Collect Drops)", "FruitSniper", 0)
     AddToggleToPage(pageShop, "Auto Buy Haki / Enhancements", "AutoBuyHaki", 38)
 
-    -- Tab 4: Visual & Misc
-    AddToggleToPage(pageMisc, "Player ESP (View Players)", "PlayerESP", 0)
+    -- Tab 5: Visual & Misc / PVP
+    AddToggleToPage(pageMisc, "Player ESP (View Enemy Players)", "PlayerESP", 0)
     AddToggleToPage(pageMisc, "Fullbright (No Darkness)", "Fullbright", 38)
     AddToggleToPage(pageMisc, "Remove Fog & Atmosphere", "RemoveFog", 76)
     AddToggleToPage(pageMisc, "Auto Buso Haki", "AutoBuso", 114)
     AddToggleToPage(pageMisc, "Auto Select Marines Team", "AutoMarine", 152)
+
+    -- Tab 6: Mastery Extra
+    AddToggleToPage(pageExtra, "Auto Farm Mastery (Skills Spammer)", "AutoMastery", 0)
 end)
 
 -- Anti-AFK Engine
@@ -227,6 +249,40 @@ task.spawn(function()
             VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
         end)
     end)
+end)
+
+-- Auto Mastery Skill Spammer
+task.spawn(function()
+    while task.wait(0.3) do
+        if Config.AutoMastery then
+            pcall(function()
+                local vim = game:GetService("VirtualInputManager")
+                for _, key in ipairs({Enum.KeyCode.Z, Enum.KeyCode.X, Enum.KeyCode.C, Enum.KeyCode.V}) do
+                    vim:SendKeyEvent(true, key, false, game)
+                    task.wait(0.05)
+                    vim:SendKeyEvent(false, key, false, game)
+                end
+            end)
+        end
+    end
+end)
+
+-- Auto Race V4 & Trial Solver Tracker
+task.spawn(function()
+    while task.wait(2) do
+        if Config.AutoRaceV4 then
+            pcall(function()
+                local char = LocalPlayer.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    -- Tự động tìm cổng Trial hoặc kích hoạt gear V4 nếu đầy thanh năng lượng
+                    local remotes = ReplicatedStorage:FindFirstChild("Remotes")
+                    if remotes and remotes:FindFirstChild("CommF_") then
+                        remotes.CommF_:InvokeServer("ActivateAbility")
+                    end
+                end
+            end)
+        end
+    end
 end)
 
 -- Fruit Sniper (Auto pickup dropped fruits)
@@ -283,6 +339,29 @@ task.spawn(function()
     end)
 end)
 
+-- Auto Boss Hunter (Elite, Rip_Indra, Dough King, etc.)
+task.spawn(function()
+    while task.wait(1) do
+        if Config.AutoBoss then
+            pcall(function()
+                local bossFolder = Workspace:FindFirstChild("Enemies")
+                if bossFolder then
+                    for _, enemy in pairs(bossFolder:GetChildren()) do
+                        local hum = enemy:FindFirstChild("Humanoid")
+                        local root = enemy:FindFirstChild("HumanoidRootPart")
+                        if hum and root and hum.Health > 0 and (enemy.Name:find("Boss") or enemy.Name:find("King") or enemy.Name:find("Rip_Indra") or enemy.Name:find("Elite")) then
+                            local char = LocalPlayer.Character
+                            if char and char:FindFirstChild("HumanoidRootPart") then
+                                char.HumanoidRootPart.CFrame = root.CFrame * CFrame.new(0, Config.DistanceY, 0)
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
 -- Auto Sea Events (Sea Beast & Leviathan Tracking)
 task.spawn(function()
     while task.wait(1) do
@@ -333,6 +412,7 @@ task.spawn(function()
                 if remotes and remotes:FindFirstChild("CommF_") then
                     remotes.CommF_:InvokeServer("AddPoint", "Melee", 3)
                     remotes.CommF_:InvokeServer("AddPoint", "Defense", 3)
+                    remotes.CommF_:InvokeServer("AddPoint", "Sword", 3)
                 end
             end)
         end
@@ -378,7 +458,7 @@ end)
 -- High-Performance Farm Loop
 task.spawn(function()
     while task.wait(0.1) do
-        if Config.AutoFarm then
+        if Config.AutoFarm and not Config.AutoBoss then
             pcall(function()
                 local char = LocalPlayer.Character
                 if not char or not char:FindFirstChild("HumanoidRootPart") or not char:FindFirstChild("Humanoid") then return end
@@ -408,7 +488,7 @@ task.spawn(function()
                     for _, enemy in pairs(enemiesFolder:GetChildren()) do
                         local eRoot = enemy:FindFirstChild("HumanoidRootPart")
                         local eHum = enemy:FindFirstChild("Humanoid")
-                        if eRoot and eHum and eHum.Health > 0 then
+                        if eRoot and eHum and eHum.Health > 0 and not enemy.Name:find("Boss") then
                             local dist = (eRoot.Position - rootPart.Position).Magnitude
                             if dist < shortestDist then
                                 shortestDist = dist
@@ -421,38 +501,4 @@ task.spawn(function()
                         local eRoot = targetEnemy.HumanoidRootPart
                         if Config.BringMobs then
                             for _, otherEnemy in pairs(enemiesFolder:GetChildren()) do
-                                local oRoot = otherEnemy:FindFirstChild("HumanoidRootPart")
-                                local oHum = otherEnemy:FindFirstChild("Humanoid")
-                                if oRoot and oHum and oHum.Health > 0 and otherEnemy.Name == targetEnemy.Name then
-                                    if (oRoot.Position - eRoot.Position).Magnitude < 450 then
-                                        oRoot.CFrame = eRoot.CFrame
-                                        oRoot.CanCollide = false
-                                        oRoot.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                                    end
-                                end
-                            end
-                        end
-
-                        rootPart.CFrame = eRoot.CFrame * CFrame.new(0, Config.DistanceY, 0)
-                        rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-
-                        VirtualUser:CaptureController()
-                        VirtualUser:Button1Down(Vector2.new(1280, 672))
-                    end
-                end
-            end)
-        end
-    end
-end)
-
--- Fast Attack Stream
-task.spawn(function()
-    RunService.Stepped:Connect(function()
-        if (Config.AutoFarm or Config.AutoRaid or Config.SeaEvent_SeaBeast) and Config.FastAttack then
-            pcall(function()
-                local combatTool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                if combatTool then combatTool:Activate() end
-            end)
-        end
-    end)
-end)
+ 
